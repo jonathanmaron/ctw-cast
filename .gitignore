@@ -1,6 +1,7 @@
 .idea
 .phpunit.cache
 .vscode
+.claude
 build
 composer.lock
 vendor
