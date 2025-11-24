@@ -5,6 +5,7 @@ parameters:
     bootstrapFiles:
         - vendor/autoload.php
     paths:
+        - bin
         - src
         - test
         - ecs.php

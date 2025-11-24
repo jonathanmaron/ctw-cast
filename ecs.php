@@ -29,6 +29,7 @@ return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->paths(
         [
+            sprintf('%s/bin', __DIR__),
             sprintf('%s/src', __DIR__),
             sprintf('%s/test', __DIR__),
             sprintf('%s/ecs.php', __DIR__),
