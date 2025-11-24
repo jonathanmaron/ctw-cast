@@ -1,7 +1,7 @@
 {
     "name": "ctw/ctw-cast",
     "description": "Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling.",
-    "license": "proprietary",
+    "license": "BSD-3-Clause",
     "type": "library",
     "require": {
         "php": "^8.3",

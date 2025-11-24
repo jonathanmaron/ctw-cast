@@ -1,10 +1,11 @@
-# CTW Cast Library
+# Package "ctw/ctw-cast"
 
 Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling and PHPStan 2 compatibility.
 
 ## Why This Library Exists
 
 PHP's native type casting is permissive and can produce unexpected results. When you cast `(string) $value`, PHP will attempt to convert almost anything—often silently failing or producing nonsensical output. This becomes especially problematic when:
+
 
 1. **Interfacing with legacy non-typed libraries** that return `mixed` types without proper type declarations
 2. **Accessing request data** from `$_GET`, `$_POST`, `$_SERVER`, or framework request objects where all values are mixed
@@ -318,10 +319,6 @@ The library includes comprehensive PHPUnit tests covering all edge cases:
 ```bash
 composer test
 ```
-
-## License
-
-MIT
 
 ## Contributing
 
