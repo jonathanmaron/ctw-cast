@@ -1,10 +1,10 @@
 # Package "ctw/ctw-cast"
 
-Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling and PHPStan 2 compatibility.
+Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling.
 
 ## Why This Library Exists
 
-PHP's native type casting is permissive and can produce unexpected results. When you cast `(string) $value`, PHP will attempt to convert almost anything—often silently failing or producing nonsensical output. This becomes especially problematic when:
+PHP's native type casting is permissive and can produce unexpected results. When you cast `(string) $value`, PHP will attempt to convert almost anything—often silently failing, throwing a TypeError or producing nonsensical output. This becomes especially problematic when:
 
 
 1. **Interfacing with legacy non-typed libraries** that return `mixed` types without proper type declarations
@@ -33,9 +33,10 @@ Cast::toString(null);         // "" - explicit, documented behavior
 Cast::toInt("not a number");  // CastException with clear message
 Cast::toBool(2);              // CastException - only 0 and 1 allowed
 Cast::toArray(42);            // [42] - same result, but explicit intent
+Cast::toJson(['foo' => 'bar']); // {"foo":"bar"} - type-safe JSON encoding
 ```
 
-This library provides a static `Cast` class with five type conversion methods that handle edge cases properly, throw descriptive exceptions for invalid inputs, and work seamlessly with PHPStan 2's strict type checking.
+This library provides a static `Cast` class with six type conversion methods that handle edge cases properly, throw descriptive exceptions for invalid inputs, and work seamlessly with PHPStan 2's strict type checking.
 
 ## Common Use Cases
 
@@ -104,6 +105,7 @@ $int = Cast::toInt($value);
 $float = Cast::toFloat($value);
 $bool = Cast::toBool($value);
 $array = Cast::toArray($value);
+$json = Cast::toJson($value);
 ```
 
 ## Methods
@@ -252,6 +254,126 @@ Cast::toArray($obj);                         // ['name' => 'John']
 
 $traversable = new ArrayIterator([1, 2, 3]);
 Cast::toArray($traversable);                 // [1, 2, 3]
+```
+
+### `Cast::toJson(mixed $value, int $flags = JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, int $depth = 512): string`
+
+Type-safe JSON encoding with comprehensive validation and error handling.
+
+**Features:**
+- Supports all JSON-compatible types: null, strings, integers, floats, booleans, arrays, and objects
+- Rejects non-JSON-compatible values like `NAN` and `INF` with clear error messages
+- Handles objects via `JsonSerializable`, `toArray()` method, or `get_object_vars()`
+- Default flags preserve Unicode and don't escape slashes for cleaner output
+- Customizable JSON encoding flags and depth limits
+- Always throws descriptive exceptions on encoding failures
+
+**Supported types:**
+- `null` → `"null"` (JSON null)
+- `string` → JSON-encoded string with proper escaping
+- `int`, `float` → JSON number (rejects `NAN` and `INF`)
+- `bool` → `"true"` or `"false"`
+- `array` → JSON array or object depending on keys
+- `object` → JSON object via serialization strategy
+
+**Example:**
+
+```php
+// Basic types
+Cast::toJson(null);                          // "null"
+Cast::toJson("hello");                       // "\"hello\""
+Cast::toJson(42);                            // "42"
+Cast::toJson(3.14);                          // "3.14"
+Cast::toJson(true);                          // "true"
+Cast::toJson(false);                         // "false"
+
+// Arrays
+Cast::toJson([]);                            // "[]"
+Cast::toJson([1, 2, 3]);                     // "[1,2,3]"
+Cast::toJson(['name' => 'John', 'age' => 30]); // "{\"name\":\"John\",\"age\":30}"
+
+// Complex nested structures
+Cast::toJson([
+    'user' => [
+        'name' => 'John',
+        'hobbies' => ['reading', 'coding']
+    ],
+    'active' => true
+]);
+// {"user":{"name":"John","hobbies":["reading","coding"]},"active":true}
+
+// Objects
+$obj = new stdClass();
+$obj->name = 'John';
+Cast::toJson($obj);                          // "{\"name\":\"John\"}"
+
+// JsonSerializable objects
+class User implements JsonSerializable {
+    public function jsonSerialize(): array {
+        return ['name' => 'John', 'role' => 'admin'];
+    }
+}
+Cast::toJson(new User());                    // "{\"name\":\"John\",\"role\":\"admin\"}"
+
+// Objects with toArray() method
+class Product {
+    public function toArray(): array {
+        return ['id' => 123, 'name' => 'Widget'];
+    }
+}
+Cast::toJson(new Product());                 // "{\"id\":123,\"name\":\"Widget\"}"
+
+// Custom flags for pretty printing
+Cast::toJson(
+    ['name' => 'John', 'age' => 30],
+    JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT
+);
+// {
+//     "name": "John",
+//     "age": 30
+// }
+
+// Error handling
+Cast::toJson(NAN);                           // CastException: Float value NAN cannot be converted to JSON
+Cast::toJson(INF);                           // CastException: Float value INF cannot be converted to JSON
+
+// Unicode support (default flags preserve unicode)
+Cast::toJson('Hello 世界 🌍');               // "\"Hello 世界 🌍\""
+
+// URL encoding (default flags don't escape slashes)
+Cast::toJson(['url' => 'https://example.com/path']);
+// {"url":"https://example.com/path"}
+```
+
+**Common use cases:**
+
+```php
+// API response formatting
+$response = Cast::toJson([
+    'status' => 'success',
+    'data' => $records,
+    'timestamp' => time()
+]);
+header('Content-Type: application/json');
+echo $response;
+
+// Logging structured data
+logger()->info('User action', [
+    'action' => 'login',
+    'payload' => Cast::toJson($userData)
+]);
+
+// Database storage of JSON columns
+$stmt->execute([
+    'settings' => Cast::toJson($userSettings),
+    'metadata' => Cast::toJson($metadata)
+]);
+
+// Configuration serialization
+file_put_contents(
+    'config.json',
+    Cast::toJson($config, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT)
+);
 ```
 
 ## Why This Matters for PHPStan 2
