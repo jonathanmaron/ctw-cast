@@ -23,7 +23,48 @@ trait ToIntTrait
     /**
      * Casts a value to integer.
      *
+     * Converts the input value to an integer with validation, rounding, and
+     * overflow detection. Unlike PHP's native (int) cast, this method validates
+     * input, rounds floats properly, and throws exceptions for invalid values.
+     *
+     * Conversion Rules:
+     * -----------------
+     * | Input Type | Input Example          | Output         |
+     * |------------|------------------------|----------------|
+     * | int        | 42                     | 42             |
+     * | int        | -17                    | -17            |
+     * | bool       | true                   | 1              |
+     * | bool       | false                  | 0              |
+     * | null       | null                   | 0              |
+     * | float      | 3.14                   | 3 (rounded)    |
+     * | float      | 3.5                    | 4 (rounded)    |
+     * | float      | -2.7                   | -3 (rounded)   |
+     * | float      | INF                    | CastException  |
+     * | float      | NAN                    | CastException  |
+     * | float      | 1e20 (overflow)        | CastException  |
+     * | string     | "42"                   | 42             |
+     * | string     | "  42  "               | 42 (trimmed)   |
+     * | string     | "3.14"                 | 3 (rounded)    |
+     * | string     | "1e3"                  | 1000           |
+     * | string     | ""                     | CastException  |
+     * | string     | "hello"                | CastException  |
+     * | string     | "42abc"                | CastException  |
+     * | array      | [1, 2, 3]              | CastException  |
+     * | object     | stdClass               | CastException  |
+     * | resource   | fopen(...)             | CastException  |
+     *
+     * Rounding Behavior:
+     * ------------------
+     * Floats are rounded using PHP's round() function (standard rounding):
+     * - 3.4 → 3, 3.5 → 4, 3.6 → 4
+     * - -3.4 → -3, -3.5 → -4, -3.6 → -4
+     *
+     * Overflow Detection:
+     * -------------------
+     * Values outside PHP_INT_MIN to PHP_INT_MAX range throw CastException.
+     *
      * @param mixed $value The value to convert
+     *
      * @return int The cast integer
      */
     public static function toInt(mixed $value): int
@@ -71,6 +112,6 @@ trait ToIntTrait
             return self::INT_FALSE;
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_INT, get_debug_type($value));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_INT, $value);
     }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Ctw\Cast;
 
+use Stringable;
+
 /**
  * Trait providing string conversion functionality.
  */
@@ -13,7 +15,33 @@ trait ToStringTrait
     /**
      * Casts a value to string.
      *
+     * Converts the input value to its string representation following explicit,
+     * predictable rules. Unlike PHP's native (string) cast, this method provides
+     * clear behavior for all types and throws exceptions for non-convertible values.
+     *
+     * Conversion Rules:
+     * -----------------
+     * | Input Type | Input Example          | Output         |
+     * |------------|------------------------|----------------|
+     * | string     | "hello"                | "hello"        |
+     * | int        | 42                     | "42"           |
+     * | int        | -17                    | "-17"          |
+     * | int        | 0                      | "0"            |
+     * | float      | 3.14                   | "3.14"         |
+     * | float      | -2.5                   | "-2.5"         |
+     * | float      | 1.0                    | "1"            |
+     * | float      | INF                    | "INF"          |
+     * | float      | NAN                    | "NAN"          |
+     * | bool       | true                   | "1"            |
+     * | bool       | false                  | "0"            |
+     * | null       | null                   | ""             |
+     * | object     | (with __toString)      | __toString()   |
+     * | object     | stdClass               | CastException  |
+     * | array      | [1, 2, 3]              | CastException  |
+     * | resource   | fopen(...)             | CastException  |
+     *
      * @param mixed $value The value to convert
+     *
      * @return string The cast string
      */
     public static function toString(mixed $value): string
@@ -35,10 +63,11 @@ trait ToStringTrait
         }
 
         if (is_object($value) && method_exists($value, '__toString')) {
-            /** @var object&\Stringable $value */
+            assert($value instanceof Stringable);
+
             return $value->__toString();
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_STRING, get_debug_type($value));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_STRING, $value);
     }
 }

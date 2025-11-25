@@ -195,9 +195,7 @@ final class ToJsonTest extends TestCase
     public function testToJsonThrowsExceptionForNanFloat(): void
     {
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage(
-            'Float value NAN cannot be cast to JSON (JSON does not support NaN values).'
-        );
+        $this->expectExceptionMessage('Float value NAN cannot be cast to JSON (JSON does not support NaN values).');
 
         Cast::toJson(NAN);
     }

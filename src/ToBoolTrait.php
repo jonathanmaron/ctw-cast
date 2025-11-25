@@ -23,7 +23,53 @@ trait ToBoolTrait
     /**
      * Casts a value to boolean.
      *
+     * Converts the input value to a boolean with strict validation. Unlike PHP's
+     * native (bool) cast which accepts any value, this method only accepts specific
+     * values that have clear boolean semantics and throws exceptions for ambiguous cases.
+     *
+     * Conversion Rules:
+     * -----------------
+     * | Input Type | Input Example          | Output         |
+     * |------------|------------------------|----------------|
+     * | bool       | true                   | true           |
+     * | bool       | false                  | false          |
+     * | int        | 1                      | true           |
+     * | int        | 0                      | false          |
+     * | int        | 42                     | CastException  |
+     * | int        | -1                     | CastException  |
+     * | float      | 1.0                    | true           |
+     * | float      | 0.0                    | false          |
+     * | float      | 3.14                   | CastException  |
+     * | float      | -1.0                   | CastException  |
+     * | string     | "true"                 | true           |
+     * | string     | "1"                    | true           |
+     * | string     | "yes"                  | true           |
+     * | string     | "on"                   | true           |
+     * | string     | "y"                    | true           |
+     * | string     | "t"                    | true           |
+     * | string     | "false"                | false          |
+     * | string     | "0"                    | false          |
+     * | string     | "no"                   | false          |
+     * | string     | "off"                  | false          |
+     * | string     | "n"                    | false          |
+     * | string     | "f"                    | false          |
+     * | string     | ""                     | false          |
+     * | string     | "  TRUE  "             | true (trimmed) |
+     * | string     | "hello"                | CastException  |
+     * | string     | "2"                    | CastException  |
+     * | null       | null                   | false          |
+     * | array      | [1, 2, 3]              | CastException  |
+     * | object     | stdClass               | CastException  |
+     * | resource   | fopen(...)             | CastException  |
+     *
+     * String Handling:
+     * ----------------
+     * String values are trimmed and compared case-insensitively.
+     * - Truthy strings: "true", "1", "yes", "on", "y", "t"
+     * - Falsy strings: "false", "0", "no", "off", "n", "f", ""
+     *
      * @param mixed $value The value to convert
+     *
      * @return bool The cast boolean
      */
     public static function toBool(mixed $value): bool
@@ -67,6 +113,6 @@ trait ToBoolTrait
             return false;
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_BOOL, get_debug_type($value));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_BOOL, $value);
     }
 }

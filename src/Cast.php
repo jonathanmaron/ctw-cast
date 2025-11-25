@@ -34,11 +34,16 @@ final class Cast
 
     private const string EMPTY_STRING = '';
 
-    /**
-     * @throws CastException
-     */
-    private static function throwCastException(string $format, bool|float|int|string|null ...$args): never
+    private static function throwCastException(string $format, mixed ...$args): never
     {
-        throw new CastException(sprintf($format, ...$args));
+        $processedArgs = array_map(
+            static fn(mixed $arg): string|int|float => match (true) {
+                is_string($arg), is_int($arg), is_float($arg) => $arg,
+                default                                       => get_debug_type($arg),
+            },
+            $args
+        );
+
+        throw new CastException(sprintf($format, ...$processedArgs));
     }
 }
