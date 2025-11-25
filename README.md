@@ -1,5 +1,6 @@
 # Package "ctw/ctw-cast"
 
+[![Latest Stable Version](https://poser.pugx.org/ctw/ctw-cast/v/stable)](https://packagist.org/packages/ctw/ctw-cast)
 [![GitHub Actions](https://github.com/jonathanmaron/ctw-cast/actions/workflows/tests.yml/badge.svg)](https://github.com/jonathanmaron/ctw-cast/actions/workflows/tests.yml)
 [![Scrutinizer Build](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/build-status/master)
 [![Scrutinizer Quality](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
