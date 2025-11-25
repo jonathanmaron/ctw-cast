@@ -4,11 +4,7 @@
     "license": "BSD-3-Clause",
     "type": "library",
     "require": {
-        "php": "^8.3",
-        "ext-fileinfo": "*",
-        "ext-libxml": "*",
-        "ext-posix": "*",
-        "ext-simplexml": "*"
+        "php": "^8.3"
     },
     "require-dev": {
         "ctw/ctw-qa": "^5.0",
