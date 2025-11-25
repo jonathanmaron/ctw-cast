@@ -9,7 +9,7 @@ build:
         override:
             - composer install --no-interaction
             -
-                command: php vendor/bin/phpunit --coverage-clover=coverage.xml
+                command: XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover=coverage.xml
                 coverage:
                     file: coverage.xml
                     format: clover
