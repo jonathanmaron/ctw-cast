@@ -196,7 +196,7 @@ final class ToStringTest extends TestCase
         $object = new stdClass();
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to string');
+        $this->expectExceptionMessage('cannot be cast to string');
 
         Cast::toString($object);
     }
@@ -209,7 +209,7 @@ final class ToStringTest extends TestCase
         $input = ['hello', 'world'];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Value of type array cannot be converted to string');
+        $this->expectExceptionMessage('Value of type array cannot be cast to string');
 
         Cast::toString($input);
     }
@@ -222,7 +222,7 @@ final class ToStringTest extends TestCase
         $input = [];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Value of type array cannot be converted to string');
+        $this->expectExceptionMessage('Value of type array cannot be cast to string');
 
         Cast::toString($input);
     }

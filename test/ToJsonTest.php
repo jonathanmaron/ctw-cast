@@ -170,7 +170,7 @@ final class ToJsonTest extends TestCase
     {
         $this->expectException(CastException::class);
         $this->expectExceptionMessage(
-            'Float value INF cannot be converted to JSON (JSON does not support infinite values).'
+            'Float value INF cannot be cast to JSON (JSON does not support infinite values).'
         );
 
         Cast::toJson(INF);
@@ -183,7 +183,7 @@ final class ToJsonTest extends TestCase
     {
         $this->expectException(CastException::class);
         $this->expectExceptionMessage(
-            'Float value INF cannot be converted to JSON (JSON does not support infinite values).'
+            'Float value INF cannot be cast to JSON (JSON does not support infinite values).'
         );
 
         Cast::toJson(-INF);
@@ -196,7 +196,7 @@ final class ToJsonTest extends TestCase
     {
         $this->expectException(CastException::class);
         $this->expectExceptionMessage(
-            'Float value NAN cannot be converted to JSON (JSON does not support NaN values).'
+            'Float value NAN cannot be cast to JSON (JSON does not support NaN values).'
         );
 
         Cast::toJson(NAN);
@@ -504,7 +504,7 @@ JSON;
         }
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to JSON');
+        $this->expectExceptionMessage('cannot be cast to JSON');
 
         try {
             Cast::toJson($resource);
@@ -525,7 +525,7 @@ JSON;
         fclose($resource);
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to JSON');
+        $this->expectExceptionMessage('cannot be cast to JSON');
 
         Cast::toJson($resource);
     }
@@ -719,71 +719,66 @@ JSON;
     }
 
     /**
-     * Test that string encoding fails without JSON_THROW_ON_ERROR and triggers non-string check
+     * Test that string encoding fails with invalid UTF-8
      */
-    public function testToJsonHandlesStringEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesStringEncodingFailureWithInvalidUtf8(): void
     {
-        // Invalid UTF-8 without JSON_THROW_ON_ERROR should return false from json_encode
         $invalidUtf8 = "\x80\x81\x82\x83";
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('json_encode returned non-string value');
+        $this->expectExceptionMessage('Malformed UTF-8');
 
         Cast::toJson($invalidUtf8, 0, 512);
     }
 
     /**
-     * Test that array encoding fails without JSON_THROW_ON_ERROR and triggers non-string check
+     * Test that array encoding fails with invalid UTF-8
      */
-    public function testToJsonHandlesArrayEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesArrayEncodingFailureWithInvalidUtf8(): void
     {
-        // Invalid UTF-8 in array without JSON_THROW_ON_ERROR
         $invalidArray = [
             'test' => "\x80\x81\x82",
         ];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('json_encode returned non-string value');
+        $this->expectExceptionMessage('Malformed UTF-8');
 
         Cast::toJson($invalidArray, 0, 512);
     }
 
     /**
-     * Test that float encoding fails without JSON_THROW_ON_ERROR and triggers non-string check
+     * Test that float encoding works with custom flags
      */
-    public function testToJsonHandlesFloatEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesFloatEncodingWithCustomFlags(): void
     {
-        // Create a scenario where float encoding might fail
-        // Note: This is hard to trigger, but we'll try with extremely large recursion
         $input = 3.14;
 
-        // With flags = 0 and valid float, this should still work
         $actual = Cast::toJson($input, 0, 512);
         self::assertSame('3.14', $actual);
     }
 
     /**
-     * Test that bool encoding works without JSON_THROW_ON_ERROR
+     * Test that bool encoding works with custom flags
      */
-    public function testToJsonHandlesBoolEncodingWithoutThrowFlag(): void
+    public function testToJsonHandlesBoolEncodingWithCustomFlags(): void
     {
         $actual = Cast::toJson(true, 0, 512);
         self::assertSame('true', $actual);
     }
 
     /**
-     * Test that int encoding works without JSON_THROW_ON_ERROR
+     * Test that int encoding works with custom flags
      */
-    public function testToJsonHandlesIntEncodingWithoutThrowFlag(): void
+    public function testToJsonHandlesIntEncodingWithCustomFlags(): void
     {
         $actual = Cast::toJson(42, 0, 512);
         self::assertSame('42', $actual);
     }
 
     /**
-     * Test JsonSerializable encoding failure without JSON_THROW_ON_ERROR
+     * Test JsonSerializable encoding failure with invalid UTF-8
      */
-    public function testToJsonHandlesJsonSerializableEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesJsonSerializableEncodingFailureWithInvalidUtf8(): void
     {
         $object = new class() implements \JsonSerializable {
             /**
@@ -798,15 +793,15 @@ JSON;
         };
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('json_encode returned non-string value');
+        $this->expectExceptionMessage('Malformed UTF-8');
 
         Cast::toJson($object, 0, 512);
     }
 
     /**
-     * Test object with toArray encoding failure without JSON_THROW_ON_ERROR
+     * Test object with toArray encoding failure with invalid UTF-8
      */
-    public function testToJsonHandlesObjectToArrayEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesObjectToArrayEncodingFailureWithInvalidUtf8(): void
     {
         $object = new class() {
             /**
@@ -821,29 +816,29 @@ JSON;
         };
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('json_encode returned non-string value');
+        $this->expectExceptionMessage('Malformed UTF-8');
 
         Cast::toJson($object, 0, 512);
     }
 
     /**
-     * Test object with get_object_vars encoding failure without JSON_THROW_ON_ERROR
+     * Test object with get_object_vars encoding failure with invalid UTF-8
      */
-    public function testToJsonHandlesObjectVarsEncodingFailureWithoutThrowFlag(): void
+    public function testToJsonHandlesObjectVarsEncodingFailureWithInvalidUtf8(): void
     {
         $object          = new stdClass();
         $object->invalid = "\x80\x81\x82";
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('json_encode returned non-string value');
+        $this->expectExceptionMessage('Malformed UTF-8');
 
         Cast::toJson($object, 0, 512);
     }
 
     /**
-     * Test that valid string works without JSON_THROW_ON_ERROR
+     * Test that valid string works with custom flags
      */
-    public function testToJsonHandlesValidStringWithoutThrowFlag(): void
+    public function testToJsonHandlesValidStringWithCustomFlags(): void
     {
         $actual = Cast::toJson('hello', 0, 512);
         self::assertSame('"hello"', $actual);
@@ -855,8 +850,8 @@ JSON;
     public function testToJsonHandlesValidArrayWithoutThrowFlag(): void
     {
         $actual = Cast::toJson([
-                'key' => 'value',
-            ], 0, 512);
+            'key' => 'value',
+        ], 0, 512);
         self::assertSame('{"key":"value"}', $actual);
     }
 

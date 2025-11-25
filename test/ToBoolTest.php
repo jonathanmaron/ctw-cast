@@ -321,7 +321,7 @@ final class ToBoolTest extends TestCase
         $input = 'maybe';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to bool');
+        $this->expectExceptionMessage('cannot be cast to bool');
 
         Cast::toBool($input);
     }
@@ -334,7 +334,7 @@ final class ToBoolTest extends TestCase
         $input = '2';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to bool');
+        $this->expectExceptionMessage('cannot be cast to bool');
 
         Cast::toBool($input);
     }
@@ -358,7 +358,7 @@ final class ToBoolTest extends TestCase
         $input = [true, false];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to bool');
+        $this->expectExceptionMessage('cannot be cast to bool');
 
         Cast::toBool($input);
     }
@@ -371,7 +371,7 @@ final class ToBoolTest extends TestCase
         $input = new stdClass();
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to bool');
+        $this->expectExceptionMessage('cannot be cast to bool');
 
         Cast::toBool($input);
     }
@@ -494,7 +494,7 @@ final class ToBoolTest extends TestCase
         $input = '  invalid  ';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to bool');
+        $this->expectExceptionMessage('cannot be cast to bool');
 
         Cast::toBool($input);
     }

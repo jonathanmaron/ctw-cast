@@ -3,18 +3,28 @@ declare(strict_types=1);
 
 namespace Ctw\Cast;
 
-use Ctw\Cast\Exception\CastException;
-
 /**
  * Trait providing integer conversion functionality.
  */
 trait ToIntTrait
 {
+    private const string ERR_EMPTY_STRING_TO_INT       = 'Empty string cannot be cast to int.';
+
+    private const string ERR_NON_NUMERIC_STRING_TO_INT = 'String value "%s" is not numeric and cannot be cast to int.';
+
+    private const string ERR_STRING_OUT_OF_RANGE       = 'Numeric string value "%s" is out of integer range.';
+
+    private const string ERR_FLOAT_INFINITE_OR_NAN     = 'Float value %s (infinite or NaN) cannot be cast to int.';
+
+    private const string ERR_FLOAT_OUT_OF_RANGE        = 'Float value %s is out of integer range (min: %d, max: %d).';
+
+    private const string ERR_CANNOT_CAST_TO_INT        = 'Value of type %s cannot be cast to int.';
+
     /**
-     * Converts a value to integer.
+     * Casts a value to integer.
      *
      * @param mixed $value The value to convert
-     * @return int The converted integer
+     * @return int The cast integer
      */
     public static function toInt(mixed $value): int
     {
@@ -23,25 +33,21 @@ trait ToIntTrait
         }
 
         if (is_bool($value)) {
-            return $value ? 1 : 0;
+            return $value ? self::INT_TRUE : self::INT_FALSE;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
-            if ('' === $trimmed) {
-                throw new CastException('Empty string cannot be converted to int.');
+            if (self::EMPTY_STRING === $trimmed) {
+                self::throwCastException(self::ERR_EMPTY_STRING_TO_INT);
             }
             if (!is_numeric($trimmed)) {
-                throw new CastException(
-                    sprintf('String value "%s" is not numeric and cannot be converted to int.', $trimmed)
-                );
+                self::throwCastException(self::ERR_NON_NUMERIC_STRING_TO_INT, $trimmed);
             }
             $numericValue = $trimmed + 0;
             if (is_float($numericValue)) {
                 if (PHP_INT_MAX < $numericValue || PHP_INT_MIN > $numericValue) {
-                    throw new CastException(
-                        sprintf('Numeric string value "%s" is out of integer range.', $trimmed)
-                    );
+                    self::throwCastException(self::ERR_STRING_OUT_OF_RANGE, $trimmed);
                 }
 
                 return (int) round($numericValue);
@@ -52,28 +58,19 @@ trait ToIntTrait
 
         if (is_float($value)) {
             if (is_infinite($value) || is_nan($value)) {
-                throw new CastException(
-                    sprintf('Float value %s (infinite or NaN) cannot be converted to int.', $value)
-                );
+                self::throwCastException(self::ERR_FLOAT_INFINITE_OR_NAN, $value);
             }
             if (PHP_INT_MAX < $value || PHP_INT_MIN > $value) {
-                throw new CastException(
-                    sprintf(
-                        'Float value %s is out of integer range (min: %d, max: %d).',
-                        $value,
-                        PHP_INT_MIN,
-                        PHP_INT_MAX
-                    )
-                );
+                self::throwCastException(self::ERR_FLOAT_OUT_OF_RANGE, $value, PHP_INT_MIN, PHP_INT_MAX);
             }
 
             return (int) round($value);
         }
 
         if (null === $value) {
-            return 0;
+            return self::INT_FALSE;
         }
 
-        throw new CastException(sprintf('Value of type %s cannot be converted to int.', get_debug_type($value)));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_INT, get_debug_type($value));
     }
 }

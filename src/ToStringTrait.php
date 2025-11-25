@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace Ctw\Cast;
 
-use Ctw\Cast\Exception\CastException;
-
 /**
  * Trait providing string conversion functionality.
  */
 trait ToStringTrait
 {
+    private const string ERR_CANNOT_CAST_TO_STRING = 'Value of type %s cannot be cast to string.';
+
     /**
-     * Converts a value to string.
+     * Casts a value to string.
      *
      * @param mixed $value The value to convert
-     * @return string The converted string
+     * @return string The cast string
      */
     public static function toString(mixed $value): string
     {
@@ -27,19 +27,18 @@ trait ToStringTrait
         }
 
         if (is_bool($value)) {
-            return $value ? '1' : '0';
+            return $value ? self::STRING_TRUE : self::STRING_FALSE;
         }
 
         if (null === $value) {
-            return '';
+            return self::EMPTY_STRING;
         }
 
         if (is_object($value) && method_exists($value, '__toString')) {
-            return (string) $value;
+            /** @var object&\Stringable $value */
+            return $value->__toString();
         }
 
-        throw new CastException(
-            sprintf('Value of type %s cannot be converted to string.', get_debug_type($value))
-        );
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_STRING, get_debug_type($value));
     }
 }

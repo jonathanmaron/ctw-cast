@@ -150,7 +150,7 @@ final class ToIntTest extends TestCase
         $input = '';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be converted to int');
+        $this->expectExceptionMessage('Empty string cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -163,7 +163,7 @@ final class ToIntTest extends TestCase
         $input = '   ';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be converted to int');
+        $this->expectExceptionMessage('Empty string cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -176,7 +176,7 @@ final class ToIntTest extends TestCase
         $input = 'hello';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to int');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -189,7 +189,7 @@ final class ToIntTest extends TestCase
         $input = '42abc';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to int');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -322,7 +322,7 @@ final class ToIntTest extends TestCase
         $input = [1, 2, 3];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to int');
+        $this->expectExceptionMessage('cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -335,7 +335,7 @@ final class ToIntTest extends TestCase
         $input = new stdClass();
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to int');
+        $this->expectExceptionMessage('cannot be cast to int');
 
         Cast::toInt($input);
     }
@@ -447,7 +447,7 @@ final class ToIntTest extends TestCase
         $input = '0xFF';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to int');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
 
         Cast::toInt($input);
     }

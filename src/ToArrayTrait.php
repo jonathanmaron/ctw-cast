@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Ctw\Cast;
 
-use Ctw\Cast\Exception\CastException;
 use JsonException;
 use Traversable;
 
@@ -12,11 +11,15 @@ use Traversable;
  */
 trait ToArrayTrait
 {
+    private const string ERR_CANNOT_CAST_TO_ARRAY = 'Value of type %s cannot be cast to array.';
+
+    private const array  JSON_START_CHARS         = ['{', '['];
+
     /**
-     * Converts a value to array.
+     * Casts a value to array.
      *
      * @param mixed $value The value to convert
-     * @return array<array-key, mixed> The converted array
+     * @return array<array-key, mixed> The cast array
      */
     public static function toArray(mixed $value): array
     {
@@ -31,11 +34,11 @@ trait ToArrayTrait
         if (is_string($value)) {
             $trimmed = trim($value);
 
-            if ('' === $trimmed) {
+            if (self::EMPTY_STRING === $trimmed) {
                 return [];
             }
 
-            if (in_array($trimmed[0], ['{', '['], true)) {
+            if (in_array($trimmed[0], self::JSON_START_CHARS, true)) {
                 try {
                     $decoded = json_decode($trimmed, true, 512, JSON_THROW_ON_ERROR);
                     if (is_array($decoded)) {
@@ -67,6 +70,6 @@ trait ToArrayTrait
             return [$value];
         }
 
-        throw new CastException(sprintf('Value of type %s cannot be converted to array.', get_debug_type($value)));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_ARRAY, get_debug_type($value));
     }
 }

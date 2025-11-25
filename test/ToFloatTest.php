@@ -183,7 +183,7 @@ final class ToFloatTest extends TestCase
         $input = '';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be converted to float');
+        $this->expectExceptionMessage('Empty string cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -196,7 +196,7 @@ final class ToFloatTest extends TestCase
         $input = '   ';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be converted to float');
+        $this->expectExceptionMessage('Empty string cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -209,7 +209,7 @@ final class ToFloatTest extends TestCase
         $input = 'hello';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to float');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -222,7 +222,7 @@ final class ToFloatTest extends TestCase
         $input = '3.14abc';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to float');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -235,7 +235,7 @@ final class ToFloatTest extends TestCase
         $input = [1.5, 2.5];
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to float');
+        $this->expectExceptionMessage('cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -248,7 +248,7 @@ final class ToFloatTest extends TestCase
         $input = new stdClass();
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be converted to float');
+        $this->expectExceptionMessage('cannot be cast to float');
 
         Cast::toFloat($input);
     }
@@ -406,7 +406,7 @@ final class ToFloatTest extends TestCase
         $input = '0xFF.5';
 
         $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be converted to float');
+        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
 
         Cast::toFloat($input);
     }

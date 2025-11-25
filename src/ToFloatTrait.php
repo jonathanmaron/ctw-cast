@@ -3,18 +3,22 @@ declare(strict_types=1);
 
 namespace Ctw\Cast;
 
-use Ctw\Cast\Exception\CastException;
-
 /**
  * Trait providing float conversion functionality.
  */
 trait ToFloatTrait
 {
+    private const string ERR_EMPTY_STRING_TO_FLOAT     = 'Empty string cannot be cast to float.';
+
+    private const string ERR_NON_NUMERIC_STRING_TO_FLOAT = 'String value "%s" is not numeric and cannot be cast to float.';
+
+    private const string ERR_CANNOT_CAST_TO_FLOAT      = 'Value of type %s cannot be cast to float.';
+
     /**
-     * Converts a value to float.
+     * Casts a value to float.
      *
      * @param mixed $value The value to convert
-     * @return float The converted float
+     * @return float The cast float
      */
     public static function toFloat(mixed $value): float
     {
@@ -27,27 +31,25 @@ trait ToFloatTrait
         }
 
         if (is_bool($value)) {
-            return $value ? 1.0 : 0.0;
+            return $value ? self::FLOAT_TRUE : self::FLOAT_FALSE;
         }
 
         if (null === $value) {
-            return 0.0;
+            return self::FLOAT_FALSE;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
-            if ('' === $trimmed) {
-                throw new CastException('Empty string cannot be converted to float.');
+            if (self::EMPTY_STRING === $trimmed) {
+                self::throwCastException(self::ERR_EMPTY_STRING_TO_FLOAT);
             }
             if (!is_numeric($trimmed)) {
-                throw new CastException(
-                    sprintf('String value "%s" is not numeric and cannot be converted to float.', $trimmed)
-                );
+                self::throwCastException(self::ERR_NON_NUMERIC_STRING_TO_FLOAT, $trimmed);
             }
 
             return (float) $trimmed;
         }
 
-        throw new CastException(sprintf('Value of type %s cannot be converted to float.', get_debug_type($value)));
+        self::throwCastException(self::ERR_CANNOT_CAST_TO_FLOAT, get_debug_type($value));
     }
 }
