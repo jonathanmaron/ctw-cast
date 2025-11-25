@@ -35,12 +35,8 @@ trait ToBoolTrait
      * | bool       | false                  | false          |
      * | int        | 1                      | true           |
      * | int        | 0                      | false          |
-     * | int        | 42                     | CastException  |
-     * | int        | -1                     | CastException  |
      * | float      | 1.0                    | true           |
      * | float      | 0.0                    | false          |
-     * | float      | 3.14                   | CastException  |
-     * | float      | -1.0                   | CastException  |
      * | string     | "true"                 | true           |
      * | string     | "1"                    | true           |
      * | string     | "yes"                  | true           |
@@ -55,9 +51,13 @@ trait ToBoolTrait
      * | string     | "f"                    | false          |
      * | string     | ""                     | false          |
      * | string     | "  TRUE  "             | true (trimmed) |
+     * | null       | null                   | false          |
+     * | int        | 42                     | CastException  |
+     * | int        | -1                     | CastException  |
+     * | float      | 3.14                   | CastException  |
+     * | float      | -1.0                   | CastException  |
      * | string     | "hello"                | CastException  |
      * | string     | "2"                    | CastException  |
-     * | null       | null                   | false          |
      * | array      | [1, 2, 3]              | CastException  |
      * | object     | stdClass               | CastException  |
      * | resource   | fopen(...)             | CastException  |

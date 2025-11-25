@@ -39,13 +39,13 @@ trait ToIntTrait
      * | float      | 3.14                   | 3 (rounded)    |
      * | float      | 3.5                    | 4 (rounded)    |
      * | float      | -2.7                   | -3 (rounded)   |
-     * | float      | INF                    | CastException  |
-     * | float      | NAN                    | CastException  |
-     * | float      | 1e20 (overflow)        | CastException  |
      * | string     | "42"                   | 42             |
      * | string     | "  42  "               | 42 (trimmed)   |
      * | string     | "3.14"                 | 3 (rounded)    |
      * | string     | "1e3"                  | 1000           |
+     * | float      | INF                    | CastException  |
+     * | float      | NAN                    | CastException  |
+     * | float      | 1e20 (overflow)        | CastException  |
      * | string     | ""                     | CastException  |
      * | string     | "hello"                | CastException  |
      * | string     | "42abc"                | CastException  |

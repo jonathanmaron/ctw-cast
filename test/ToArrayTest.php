@@ -5,6 +5,7 @@ namespace CtwTest\Cast;
 
 use ArrayObject;
 use Ctw\Cast\Cast;
+use Ctw\Cast\Exception\CastException;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -279,6 +280,9 @@ final class ToArrayTest extends TestCase
     public function testToArrayConvertsObjectWithToArrayMethod(): void
     {
         $object = new class() {
+            /**
+             * @return array<string, mixed>
+             */
             public function toArray(): array
             {
                 return [
@@ -616,5 +620,23 @@ final class ToArrayTest extends TestCase
             'null'   => null,
             'string' => 'text',
         ], $actual);
+    }
+
+    /**
+     * Test that resource throws exception
+     */
+    public function testToArrayThrowsExceptionForResource(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+
+        $this->expectException(CastException::class);
+        $this->expectExceptionMessage('Value of type resource (stream) cannot be cast to array.');
+
+        try {
+            Cast::toArray($resource);
+        } finally {
+            fclose($resource);
+        }
     }
 }
