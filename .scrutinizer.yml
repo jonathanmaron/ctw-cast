@@ -1,0 +1,28 @@
+build:
+    environment:
+        php:
+            version: '8.3'
+
+    nodes:
+        php83-tests:
+            environment:
+                php:
+                    version: '8.3'
+            tests:
+                override:
+                    - composer install --no-interaction
+                    - php vendor/bin/phpunit
+
+        php84-tests:
+            environment:
+                php:
+                    version: '8.4'
+            tests:
+                override:
+                    - composer install --no-interaction
+                    - php vendor/bin/phpunit
+
+checks:
+    php:
+        code_rating: true
+        duplication: true
