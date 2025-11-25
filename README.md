@@ -1,5 +1,10 @@
 # Package "ctw/ctw-cast"
 
+[![GitHub Actions](https://github.com/jonathanmaron/ctw-cast/actions/workflows/tests.yml/badge.svg)](https://github.com/jonathanmaron/ctw-cast/actions/workflows/tests.yml)
+[![Scrutinizer Build](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/build-status/master)
+[![Scrutinizer Quality](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
+
 Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling.
 
 ## Introduction
