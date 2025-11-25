@@ -1,26 +1,22 @@
 build:
+    image: default-bionic
+
     environment:
         php:
-            version: '8.3'
+            version: 8.3.0
 
-    nodes:
-        php83-tests:
-            environment:
-                php:
-                    version: '8.3'
-            tests:
-                override:
-                    - composer install --no-interaction
-                    - php vendor/bin/phpunit
+    tests:
+        override:
+            - composer install --no-interaction
+            -
+                command: php vendor/bin/phpunit --coverage-clover=coverage.xml
+                coverage:
+                    file: coverage.xml
+                    format: clover
 
-        php84-tests:
-            environment:
-                php:
-                    version: '8.4'
-            tests:
-                override:
-                    - composer install --no-interaction
-                    - php vendor/bin/phpunit
+filter:
+    paths:
+        - src/
 
 checks:
     php:
