@@ -8,24 +8,12 @@ namespace Ctw\Cast;
  */
 trait ToIntTrait
 {
-    private const string ERR_EMPTY_STRING_TO_INT       = 'Empty string cannot be cast to int.';
-
-    private const string ERR_NON_NUMERIC_STRING_TO_INT = 'String value "%s" is not numeric and cannot be cast to int.';
-
-    private const string ERR_STRING_OUT_OF_RANGE       = 'Numeric string value "%s" is out of integer range.';
-
-    private const string ERR_FLOAT_INFINITE_OR_NAN     = 'Float value %s (infinite or NaN) cannot be cast to int.';
-
-    private const string ERR_FLOAT_OUT_OF_RANGE        = 'Float value %s is out of integer range (min: %d, max: %d).';
-
-    private const string ERR_CANNOT_CAST_TO_INT        = 'Value of type %s cannot be cast to int.';
-
     /**
      * Casts a value to integer.
      *
-     * Converts the input value to an integer with validation, rounding, and
-     * overflow detection. Unlike PHP's native (int) cast, this method validates
-     * input, rounds floats properly, and throws exceptions for invalid values.
+     * Converts the input value to an integer with rounding for floats.
+     * Values that cannot be interpreted as integers (invalid strings, overflow,
+     * infinite/NaN floats, arrays, objects, resources) return 0.
      *
      * Conversion Rules:
      * -----------------
@@ -43,15 +31,15 @@ trait ToIntTrait
      * | string     | "  42  "               | 42 (trimmed)   |
      * | string     | "3.14"                 | 3 (rounded)    |
      * | string     | "1e3"                  | 1000           |
-     * | float      | INF                    | CastException  |
-     * | float      | NAN                    | CastException  |
-     * | float      | 1e20 (overflow)        | CastException  |
-     * | string     | ""                     | CastException  |
-     * | string     | "hello"                | CastException  |
-     * | string     | "42abc"                | CastException  |
-     * | array      | [1, 2, 3]              | CastException  |
-     * | object     | stdClass               | CastException  |
-     * | resource   | fopen(...)             | CastException  |
+     * | float      | INF                    | 0              |
+     * | float      | NAN                    | 0              |
+     * | float      | 1e20 (overflow)        | 0              |
+     * | string     | ""                     | 0              |
+     * | string     | "hello"                | 0              |
+     * | string     | "42abc"                | 0              |
+     * | array      | [1, 2, 3]              | 0              |
+     * | object     | stdClass               | 0              |
+     * | resource   | fopen(...)             | 0              |
      *
      * Rounding Behavior:
      * ------------------
@@ -61,11 +49,11 @@ trait ToIntTrait
      *
      * Overflow Detection:
      * -------------------
-     * Values outside PHP_INT_MIN to PHP_INT_MAX range throw CastException.
+     * Values outside PHP_INT_MIN to PHP_INT_MAX range return 0.
      *
      * @param mixed $value The value to convert
      *
-     * @return int The cast integer
+     * @return int The cast integer, or 0 if the value cannot be cast
      */
     public static function toInt(mixed $value): int
     {
@@ -74,21 +62,21 @@ trait ToIntTrait
         }
 
         if (is_bool($value)) {
-            return $value ? self::INT_TRUE : self::INT_FALSE;
+            return $value ? self::INT_TRUE : self::EMPTY_INT;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
             if (self::EMPTY_STRING === $trimmed) {
-                self::throwCastException(self::ERR_EMPTY_STRING_TO_INT);
+                return self::EMPTY_INT;
             }
             if (!is_numeric($trimmed)) {
-                self::throwCastException(self::ERR_NON_NUMERIC_STRING_TO_INT, $trimmed);
+                return self::EMPTY_INT;
             }
             $numericValue = $trimmed + 0;
             if (is_float($numericValue)) {
                 if (PHP_INT_MAX < $numericValue || PHP_INT_MIN > $numericValue) {
-                    self::throwCastException(self::ERR_STRING_OUT_OF_RANGE, $trimmed);
+                    return self::EMPTY_INT;
                 }
 
                 return (int) round($numericValue);
@@ -99,19 +87,15 @@ trait ToIntTrait
 
         if (is_float($value)) {
             if (is_infinite($value) || is_nan($value)) {
-                self::throwCastException(self::ERR_FLOAT_INFINITE_OR_NAN, $value);
+                return self::EMPTY_INT;
             }
             if (PHP_INT_MAX < $value || PHP_INT_MIN > $value) {
-                self::throwCastException(self::ERR_FLOAT_OUT_OF_RANGE, $value, PHP_INT_MIN, PHP_INT_MAX);
+                return self::EMPTY_INT;
             }
 
             return (int) round($value);
         }
 
-        if (null === $value) {
-            return self::INT_FALSE;
-        }
-
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_INT, $value);
+        return self::EMPTY_INT;
     }
 }

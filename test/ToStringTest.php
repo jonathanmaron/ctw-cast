@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CtwTest\Cast;
 
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Stringable;
@@ -189,42 +188,36 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that object without __toString method throws exception
+     * Test that object without __toString method is converted to empty string
      */
-    public function testToStringThrowsExceptionForObjectWithoutToStringMethod(): void
+    public function testToStringConvertsObjectWithoutToStringMethodToEmptyString(): void
     {
         $object = new stdClass();
+        $actual = Cast::toString($object);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to string');
-
-        Cast::toString($object);
+        self::assertSame('', $actual);
     }
 
     /**
-     * Test that array throws exception
+     * Test that array is converted to empty string
      */
-    public function testToStringThrowsExceptionForArray(): void
+    public function testToStringConvertsArrayToEmptyString(): void
     {
-        $input = ['hello', 'world'];
+        $input  = ['hello', 'world'];
+        $actual = Cast::toString($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Value of type array cannot be cast to string');
-
-        Cast::toString($input);
+        self::assertSame('', $actual);
     }
 
     /**
-     * Test that empty array throws exception
+     * Test that empty array is converted to empty string
      */
-    public function testToStringThrowsExceptionForEmptyArray(): void
+    public function testToStringConvertsEmptyArrayToEmptyString(): void
     {
-        $input = [];
+        $input  = [];
+        $actual = Cast::toString($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Value of type array cannot be cast to string');
-
-        Cast::toString($input);
+        self::assertSame('', $actual);
     }
 
     /**
@@ -324,5 +317,36 @@ final class ToStringTest extends TestCase
         $actual = Cast::toString($input);
 
         self::assertSame('NAN', $actual);
+    }
+
+    /**
+     * Test that Stringable object returning an empty string yields an empty string.
+     */
+    public function testToStringConvertsStringableObjectReturningEmptyString(): void
+    {
+        $object = new class() implements Stringable {
+            public function __toString(): string
+            {
+                return '';
+            }
+        };
+
+        $actual = Cast::toString($object);
+
+        self::assertSame('', $actual);
+    }
+
+    /**
+     * Test that closed resource is converted to empty string.
+     */
+    public function testToStringConvertsClosedResourceToEmptyString(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+        fclose($resource);
+
+        $actual = Cast::toString($resource);
+
+        self::assertSame('', $actual);
     }
 }

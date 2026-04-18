@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CtwTest\Cast;
 
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -164,40 +163,33 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that INF float throws exception
+     * Test that INF float is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForInfiniteFloat(): void
+    public function testToJsonConvertsInfiniteFloatToEmptyObject(): void
     {
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage(
-            'Float value INF cannot be cast to JSON (JSON does not support infinite values).'
-        );
+        $actual = Cast::toJson(INF);
 
-        Cast::toJson(INF);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that negative INF float throws exception
+     * Test that negative INF float is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForNegativeInfiniteFloat(): void
+    public function testToJsonConvertsNegativeInfiniteFloatToEmptyObject(): void
     {
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage(
-            'Float value INF cannot be cast to JSON (JSON does not support infinite values).'
-        );
+        $actual = Cast::toJson(-INF);
 
-        Cast::toJson(-INF);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that NAN float throws exception
+     * Test that NAN float is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForNanFloat(): void
+    public function testToJsonConvertsNanFloatToEmptyObject(): void
     {
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Float value NAN cannot be cast to JSON (JSON does not support NaN values).');
+        $actual = Cast::toJson(NAN);
 
-        Cast::toJson(NAN);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -380,9 +372,9 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that object with toArray returning non-array throws exception
+     * Test that object with toArray returning non-array is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionWhenToArrayReturnsNonArray(): void
+    public function testToJsonConvertsObjectWithToArrayReturningNonArrayToEmptyObject(): void
     {
         $object = new class() {
             public function toArray(): string
@@ -391,10 +383,9 @@ final class ToJsonTest extends TestCase
             }
         };
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('has toArray() method but it did not return an array');
+        $actual = Cast::toJson($object);
 
-        Cast::toJson($object);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -451,9 +442,9 @@ JSON;
     }
 
     /**
-     * Test that exceeding max depth throws exception
+     * Test that exceeding max depth is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionWhenExceedingMaxDepth(): void
+    public function testToJsonConvertsExceedingMaxDepthToEmptyObject(): void
     {
         $input = [
             'level1' => [
@@ -463,58 +454,54 @@ JSON;
             ],
         ];
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode array to JSON');
+        $actual = Cast::toJson($input, JSON_THROW_ON_ERROR, 2);
 
-        Cast::toJson($input, JSON_THROW_ON_ERROR, 2);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that depth less than 1 throws exception
+     * Test that depth less than 1 is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForDepthLessThanOne(): void
+    public function testToJsonConvertsDepthLessThanOneToEmptyObject(): void
     {
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Depth must be at least 1, got 0');
+        $actual = Cast::toJson(['test'], JSON_THROW_ON_ERROR, 0);
 
-        Cast::toJson(['test'], JSON_THROW_ON_ERROR, 0);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that negative depth throws exception
+     * Test that negative depth is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForNegativeDepth(): void
+    public function testToJsonConvertsNegativeDepthToEmptyObject(): void
     {
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Depth must be at least 1, got -1');
+        $actual = Cast::toJson(['test'], JSON_THROW_ON_ERROR, -1);
 
-        Cast::toJson(['test'], JSON_THROW_ON_ERROR, -1);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that resource type throws exception
+     * Test that resource type is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForResourceType(): void
+    public function testToJsonConvertsResourceTypeToEmptyObject(): void
     {
         $resource = fopen('php://memory', 'r');
         if (false === $resource) {
             self::fail('Failed to open resource');
         }
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to JSON');
-
         try {
-            Cast::toJson($resource);
+            $actual = Cast::toJson($resource);
         } finally {
             fclose($resource);
         }
+
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that closed resource throws exception
+     * Test that closed resource is converted to empty JSON object
      */
-    public function testToJsonThrowsExceptionForClosedResource(): void
+    public function testToJsonConvertsClosedResourceToEmptyObject(): void
     {
         $resource = fopen('php://memory', 'r');
         if (false === $resource) {
@@ -522,24 +509,21 @@ JSON;
         }
         fclose($resource);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to JSON');
+        $actual = Cast::toJson($resource);
 
-        Cast::toJson($resource);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that invalid UTF-8 string triggers JsonException path
+     * Test that invalid UTF-8 string is converted to empty JSON object
      */
-    public function testToJsonHandlesInvalidUtf8String(): void
+    public function testToJsonConvertsInvalidUtf8StringToEmptyObject(): void
     {
-        // Create an invalid UTF-8 string
         $invalidUtf8 = "\x80\x81\x82\x83";
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode string to JSON');
+        $actual = Cast::toJson($invalidUtf8);
 
-        Cast::toJson($invalidUtf8);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -605,25 +589,24 @@ JSON;
     }
 
     /**
-     * Test that array with invalid UTF-8 triggers JsonException
+     * Test that array with invalid UTF-8 is converted to empty JSON object
      */
-    public function testToJsonHandlesArrayWithInvalidUtf8(): void
+    public function testToJsonConvertsArrayWithInvalidUtf8ToEmptyObject(): void
     {
         $invalidArray = [
             'valid' => 'test',
             'invalid' => "\x80\x81\x82",
         ];
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode array to JSON');
+        $actual = Cast::toJson($invalidArray);
 
-        Cast::toJson($invalidArray);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that object with toArray returning array with invalid UTF-8 triggers exception
+     * Test that object with toArray returning array with invalid UTF-8 is converted to empty JSON object
      */
-    public function testToJsonHandlesObjectWithToArrayReturningInvalidUtf8(): void
+    public function testToJsonConvertsObjectWithToArrayReturningInvalidUtf8ToEmptyObject(): void
     {
         $object = new class() {
             /**
@@ -637,16 +620,15 @@ JSON;
             }
         };
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode object of type');
+        $actual = Cast::toJson($object);
 
-        Cast::toJson($object);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that JsonSerializable with invalid UTF-8 triggers exception
+     * Test that JsonSerializable with invalid UTF-8 is converted to empty JSON object
      */
-    public function testToJsonHandlesJsonSerializableWithInvalidUtf8(): void
+    public function testToJsonConvertsJsonSerializableWithInvalidUtf8ToEmptyObject(): void
     {
         $object = new class() implements \JsonSerializable {
             /**
@@ -660,25 +642,23 @@ JSON;
             }
         };
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode JsonSerializable object');
+        $actual = Cast::toJson($object);
 
-        Cast::toJson($object);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that object with invalid UTF-8 in properties triggers exception
+     * Test that object with invalid UTF-8 in properties is converted to empty JSON object
      */
-    public function testToJsonHandlesObjectWithInvalidUtf8Property(): void
+    public function testToJsonConvertsObjectWithInvalidUtf8PropertyToEmptyObject(): void
     {
         $object          = new stdClass();
         $object->valid   = 'test';
         $object->invalid = "\x80\x81\x82";
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Failed to encode object of type stdClass to JSON');
+        $actual = Cast::toJson($object);
 
-        Cast::toJson($object);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -717,31 +697,29 @@ JSON;
     }
 
     /**
-     * Test that string encoding fails with invalid UTF-8
+     * Test that string encoding with invalid UTF-8 returns empty JSON object
      */
-    public function testToJsonHandlesStringEncodingFailureWithInvalidUtf8(): void
+    public function testToJsonConvertsStringWithInvalidUtf8AndCustomFlagsToEmptyObject(): void
     {
         $invalidUtf8 = "\x80\x81\x82\x83";
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Malformed UTF-8');
+        $actual = Cast::toJson($invalidUtf8, 0, 512);
 
-        Cast::toJson($invalidUtf8, 0, 512);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test that array encoding fails with invalid UTF-8
+     * Test that array encoding with invalid UTF-8 returns empty JSON object
      */
-    public function testToJsonHandlesArrayEncodingFailureWithInvalidUtf8(): void
+    public function testToJsonConvertsArrayWithInvalidUtf8AndCustomFlagsToEmptyObject(): void
     {
         $invalidArray = [
             'test' => "\x80\x81\x82",
         ];
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Malformed UTF-8');
+        $actual = Cast::toJson($invalidArray, 0, 512);
 
-        Cast::toJson($invalidArray, 0, 512);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -774,9 +752,9 @@ JSON;
     }
 
     /**
-     * Test JsonSerializable encoding failure with invalid UTF-8
+     * Test JsonSerializable encoding failure with invalid UTF-8 returns empty JSON object
      */
-    public function testToJsonHandlesJsonSerializableEncodingFailureWithInvalidUtf8(): void
+    public function testToJsonConvertsJsonSerializableEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
         $object = new class() implements \JsonSerializable {
             /**
@@ -790,16 +768,15 @@ JSON;
             }
         };
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Malformed UTF-8');
+        $actual = Cast::toJson($object, 0, 512);
 
-        Cast::toJson($object, 0, 512);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test object with toArray encoding failure with invalid UTF-8
+     * Test object with toArray encoding failure with invalid UTF-8 returns empty JSON object
      */
-    public function testToJsonHandlesObjectToArrayEncodingFailureWithInvalidUtf8(): void
+    public function testToJsonConvertsObjectToArrayEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
         $object = new class() {
             /**
@@ -813,24 +790,22 @@ JSON;
             }
         };
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Malformed UTF-8');
+        $actual = Cast::toJson($object, 0, 512);
 
-        Cast::toJson($object, 0, 512);
+        self::assertSame('{}', $actual);
     }
 
     /**
-     * Test object with get_object_vars encoding failure with invalid UTF-8
+     * Test object with get_object_vars encoding failure with invalid UTF-8 returns empty JSON object
      */
-    public function testToJsonHandlesObjectVarsEncodingFailureWithInvalidUtf8(): void
+    public function testToJsonConvertsObjectVarsEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
         $object          = new stdClass();
         $object->invalid = "\x80\x81\x82";
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Malformed UTF-8');
+        $actual = Cast::toJson($object, 0, 512);
 
-        Cast::toJson($object, 0, 512);
+        self::assertSame('{}', $actual);
     }
 
     /**
@@ -905,5 +880,49 @@ JSON;
 
         $actual = Cast::toJson($object, 0, 512);
         self::assertSame('{"valid":"data"}', $actual);
+    }
+
+    /**
+     * Test that JsonSerializable returning a scalar is encoded as a JSON scalar.
+     */
+    public function testToJsonEncodesJsonSerializableReturningScalarValue(): void
+    {
+        $object = new class() implements \JsonSerializable {
+            public function jsonSerialize(): int
+            {
+                return 7;
+            }
+        };
+
+        $actual = Cast::toJson($object);
+
+        self::assertSame('7', $actual);
+    }
+
+    /**
+     * Test that a nested array exactly at the configured depth succeeds.
+     */
+    public function testToJsonEncodesArrayExactlyAtConfiguredDepth(): void
+    {
+        $input = [
+            'a' => [
+                'b' => 'c',
+            ],
+        ];
+
+        $actual = Cast::toJson($input, JSON_THROW_ON_ERROR, 2);
+
+        self::assertSame('{"a":{"b":"c"}}', $actual);
+    }
+
+    /**
+     * Test that float exactly at large magnitude but finite encodes successfully.
+     */
+    public function testToJsonEncodesLargeButFiniteFloat(): void
+    {
+        $input  = 1.0e100;
+        $actual = Cast::toJson($input);
+
+        self::assertStringContainsString('1.0e+100', strtolower($actual));
     }
 }

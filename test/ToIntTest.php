@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CtwTest\Cast;
 
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -143,55 +142,47 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that empty string throws exception
+     * Test that empty string is converted to 0
      */
-    public function testToIntThrowsExceptionForEmptyString(): void
+    public function testToIntConvertsEmptyStringToZero(): void
     {
-        $input = '';
+        $input  = '';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that whitespace only string throws exception
+     * Test that whitespace only string is converted to 0
      */
-    public function testToIntThrowsExceptionForWhitespaceOnlyString(): void
+    public function testToIntConvertsWhitespaceOnlyStringToZero(): void
     {
-        $input = '   ';
+        $input  = '   ';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that non-numeric string throws exception
+     * Test that non-numeric string is converted to 0
      */
-    public function testToIntThrowsExceptionForNonNumericString(): void
+    public function testToIntConvertsNonNumericStringToZero(): void
     {
-        $input = 'hello';
+        $input  = 'hello';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that string with non-numeric characters throws exception
+     * Test that string with non-numeric characters is converted to 0
      */
-    public function testToIntThrowsExceptionForStringWithNonNumericCharacters(): void
+    public function testToIntConvertsStringWithNonNumericCharactersToZero(): void
     {
-        $input = '42abc';
+        $input  = '42abc';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -239,68 +230,58 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float exceeding PHP_INT_MAX throws exception
+     * Test that float exceeding PHP_INT_MAX is converted to 0
      */
-    public function testToIntThrowsExceptionForFloatExceedingMaxInt(): void
+    public function testToIntConvertsFloatExceedingMaxIntToZero(): void
     {
-        $input = (float) PHP_INT_MAX + 1e10;
+        $input  = (float) PHP_INT_MAX + 1e10;
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is out of integer range');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that float below PHP_INT_MIN throws exception
+     * Test that float below PHP_INT_MIN is converted to 0
      */
-    public function testToIntThrowsExceptionForFloatBelowMinInt(): void
+    public function testToIntConvertsFloatBelowMinIntToZero(): void
     {
-        $input = (float) PHP_INT_MIN - 1e10;
+        $input  = (float) PHP_INT_MIN - 1e10;
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is out of integer range');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that infinite float throws exception
+     * Test that infinite float is converted to 0
      */
-    public function testToIntThrowsExceptionForInfiniteFloat(): void
+    public function testToIntConvertsInfiniteFloatToZero(): void
     {
-        $input = INF;
+        $input  = INF;
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('infinite or NaN');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that negative infinite float throws exception
+     * Test that negative infinite float is converted to 0
      */
-    public function testToIntThrowsExceptionForNegativeInfiniteFloat(): void
+    public function testToIntConvertsNegativeInfiniteFloatToZero(): void
     {
-        $input = -INF;
+        $input  = -INF;
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('infinite or NaN');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that NaN throws exception
+     * Test that NaN is converted to 0
      */
-    public function testToIntThrowsExceptionForNaN(): void
+    public function testToIntConvertsNaNToZero(): void
     {
-        $input = NAN;
+        $input  = NAN;
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('infinite or NaN');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -315,29 +296,25 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that array throws exception
+     * Test that array is converted to 0
      */
-    public function testToIntThrowsExceptionForArray(): void
+    public function testToIntConvertsArrayToZero(): void
     {
-        $input = [1, 2, 3];
+        $input  = [1, 2, 3];
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that object throws exception
+     * Test that object is converted to 0
      */
-    public function testToIntThrowsExceptionForObject(): void
+    public function testToIntConvertsObjectToZero(): void
     {
-        $input = new stdClass();
+        $input  = new stdClass();
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -440,28 +417,60 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that hex-like string throws exception
+     * Test that hex-like string is converted to 0
      */
-    public function testToIntThrowsExceptionForHexLikeString(): void
+    public function testToIntConvertsHexLikeStringToZero(): void
     {
-        $input = '0xFF';
+        $input  = '0xFF';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to int');
-
-        Cast::toInt($input);
+        self::assertSame(0, $actual);
     }
 
     /**
-     * Test that numeric string exceeding integer range throws exception
+     * Test that numeric string exceeding integer range is converted to 0
      */
-    public function testToIntThrowsExceptionForNumericStringExceedingRange(): void
+    public function testToIntConvertsNumericStringExceedingRangeToZero(): void
     {
-        $input = '9999999999999999999999999999';
+        $input  = '9999999999999999999999999999';
+        $actual = Cast::toInt($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is out of integer range');
+        self::assertSame(0, $actual);
+    }
 
-        Cast::toInt($input);
+    /**
+     * Test that numeric string below integer range is converted to 0.
+     */
+    public function testToIntConvertsNumericStringBelowRangeToZero(): void
+    {
+        $input  = '-9999999999999999999999999999';
+        $actual = Cast::toInt($input);
+
+        self::assertSame(0, $actual);
+    }
+
+    /**
+     * Test that string "-0" is converted to 0.
+     */
+    public function testToIntConvertsNegativeZeroStringToZero(): void
+    {
+        $input  = '-0';
+        $actual = Cast::toInt($input);
+
+        self::assertSame(0, $actual);
+    }
+
+    /**
+     * Test that closed resource is converted to 0.
+     */
+    public function testToIntConvertsClosedResourceToZero(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+        fclose($resource);
+
+        $actual = Cast::toInt($resource);
+
+        self::assertSame(0, $actual);
     }
 }

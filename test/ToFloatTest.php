@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CtwTest\Cast;
 
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -176,81 +175,69 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that empty string throws exception
+     * Test that empty string is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForEmptyString(): void
+    public function testToFloatConvertsEmptyStringToZero(): void
     {
-        $input = '';
+        $input  = '';
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
-     * Test that whitespace only string throws exception
+     * Test that whitespace only string is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForWhitespaceOnlyString(): void
+    public function testToFloatConvertsWhitespaceOnlyStringToZero(): void
     {
-        $input = '   ';
+        $input  = '   ';
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Empty string cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
-     * Test that non-numeric string throws exception
+     * Test that non-numeric string is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForNonNumericString(): void
+    public function testToFloatConvertsNonNumericStringToZero(): void
     {
-        $input = 'hello';
+        $input  = 'hello';
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
-     * Test that string with non-numeric characters throws exception
+     * Test that string with non-numeric characters is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForStringWithNonNumericCharacters(): void
+    public function testToFloatConvertsStringWithNonNumericCharactersToZero(): void
     {
-        $input = '3.14abc';
+        $input  = '3.14abc';
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
-     * Test that array throws exception
+     * Test that array is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForArray(): void
+    public function testToFloatConvertsArrayToZero(): void
     {
-        $input = [1.5, 2.5];
+        $input  = [1.5, 2.5];
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
-     * Test that object throws exception
+     * Test that object is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForObject(): void
+    public function testToFloatConvertsObjectToZero(): void
     {
-        $input = new stdClass();
+        $input  = new stdClass();
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to float');
-
-        Cast::toFloat($input);
+        self::assertSame(0.0, $actual);
     }
 
     /**
@@ -399,15 +386,49 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that hex-like string throws exception
+     * Test that hex-like string is converted to 0.0
      */
-    public function testToFloatThrowsExceptionForHexLikeString(): void
+    public function testToFloatConvertsHexLikeStringToZero(): void
     {
-        $input = '0xFF.5';
+        $input  = '0xFF.5';
+        $actual = Cast::toFloat($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('is not numeric and cannot be cast to float');
+        self::assertSame(0.0, $actual);
+    }
 
-        Cast::toFloat($input);
+    /**
+     * Test that word "Infinity" string is converted to 0.0 since it is not numeric.
+     */
+    public function testToFloatConvertsInfinityWordStringToZero(): void
+    {
+        $input  = 'Infinity';
+        $actual = Cast::toFloat($input);
+
+        self::assertSame(0.0, $actual);
+    }
+
+    /**
+     * Test that word "NaN" string is converted to 0.0 since it is not numeric.
+     */
+    public function testToFloatConvertsNanWordStringToZero(): void
+    {
+        $input  = 'NaN';
+        $actual = Cast::toFloat($input);
+
+        self::assertSame(0.0, $actual);
+    }
+
+    /**
+     * Test that closed resource is converted to 0.0.
+     */
+    public function testToFloatConvertsClosedResourceToZero(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+        fclose($resource);
+
+        $actual = Cast::toFloat($resource);
+
+        self::assertSame(0.0, $actual);
     }
 }

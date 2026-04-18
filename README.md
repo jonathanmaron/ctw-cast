@@ -6,7 +6,7 @@
 [![Scrutinizer Quality](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
 
-Type-safe casting utility for PHP 8.3+ applications with comprehensive error handling.
+Type-safe, exception-free casting utility for PHP 8.3+ applications.
 
 ## Introduction
 
@@ -30,14 +30,27 @@ PHP's native type casting (`(int)`, `(string)`, etc.) is permissive and can sile
 (float) "invalid"; // 0.0 (no error)
 ```
 
-This library provides **validated, predictable type conversions** that throw exceptions for invalid input rather than silently corrupting data.
+This library provides **predictable, exception-free type conversions**. When a value cannot be cast, a safe default is returned instead of throwing an exception, making it ideal for use in hot paths, middleware, and defensive code where unexpected input must never interrupt execution.
+
+### Default Return Values
+
+When a value cannot be cast to the target type, the following defaults are returned:
+
+| Method     | Default Return |
+|------------|----------------|
+| `toArray`  | `[]`           |
+| `toBool`   | `false`        |
+| `toFloat`  | `0.0`          |
+| `toInt`    | `0`            |
+| `toJson`   | `'{}'`         |
+| `toString` | `''`           |
 
 ### Problems This Library Solves
 
-1. **Silent data corruption**: Native casts convert invalid values without warning
-2. **Inconsistent boolean handling**: PHP treats `"false"`, `"no"`, `"off"` as `true`
+1. **Silent data corruption**: Native casts convert invalid values in unpredictable ways; this library uses clear, documented rules
+2. **Inconsistent boolean handling**: PHP treats `"false"`, `"no"`, `"off"` as `true`; this library treats them as `false`
 3. **Missing validation**: No built-in way to reject non-numeric strings for number conversion
-4. **Overflow detection**: Native `(int)` silently wraps on overflow
+4. **Overflow handling**: Native `(int)` silently wraps on overflow; this library returns `0`
 5. **Type ambiguity**: Superglobals and legacy code return `mixed`, breaking strict typing
 
 ### Accessing Data from Superglobals
@@ -99,20 +112,20 @@ $count  = Cast::toInt($result);
 
 ### Where to Use This Library
 
-- **Controllers**: Validate and cast request parameters
+- **Controllers**: Cast request parameters to expected types
 - **Service layers**: Ensure type safety when processing external data
 - **CLI commands**: Parse command-line arguments and environment variables
 - **Data mappers**: Convert database results to typed domain objects
-- **API handlers**: Validate incoming JSON payloads
-- **Configuration loaders**: Parse and validate config values
+- **API handlers**: Decode incoming JSON payloads
+- **Configuration loaders**: Parse config values
 - **Queue workers**: Process messages with mixed payloads
-- **Middleware**: Sanitize and type request/response data
+- **Middleware**: Normalize request/response data
 
 ### Design Goals
 
-1. **Fail fast**: Invalid conversions throw `CastException` immediately
+1. **Never throw**: Every method returns a safe default when a value cannot be cast
 2. **Explicit behavior**: Every conversion rule is documented and predictable
-3. **No silent corruption**: Ambiguous values are rejected, not guessed
+3. **No silent corruption**: Ambiguous values produce the documented default, not a guess
 4. **PHPStan/Psalm friendly**: Return types are precise, enabling static analysis
 5. **Zero dependencies**: No external packages required
 
@@ -126,7 +139,7 @@ $count  = Cast::toInt($result);
 Install by adding the package as a [Composer](https://getcomposer.org) requirement:
 
 ```bash
-composer require ctw/cast
+composer require ctw/ctw-cast
 ```
 
 ## Usage Examples
@@ -146,12 +159,13 @@ $json   = Cast::toJson($value);
 
 ## `Cast::toString(mixed $value): string`
 
-Converts values to string representation with explicit, predictable rules.
+Converts values to string representation with explicit, predictable rules. Returns `''` for values that cannot be cast.
 
 ```php
-Cast::toString(42);        // "42"
-Cast::toString(true);      // "1"
-Cast::toString(null);      // ""
+Cast::toString(42);           // "42"
+Cast::toString(true);         // "1"
+Cast::toString(null);         // ""
+Cast::toString([1, 2, 3]);    // ""
 ```
 
 | Input Type | Input Value            | Output                |
@@ -169,20 +183,22 @@ Cast::toString(null);      // ""
 | bool       | `false`                | `"0"`                 |
 | null       | `null`                 | `""`                  |
 | object     | with `__toString()`    | `__toString()` result |
-| object     | without `__toString()` | CastException         |
-| array      | `[1, 2, 3]`            | CastException         |
-| resource   | `fopen(...)`           | CastException         |
+| object     | without `__toString()` | `""`                  |
+| array      | `[1, 2, 3]`            | `""`                  |
+| resource   | `fopen(...)`           | `""`                  |
 
 ---
 
 ## `Cast::toInt(mixed $value): int`
 
-Converts values to integers with validation, rounding, and overflow detection.
+Converts values to integers with rounding for floats. Returns `0` for values that cannot be cast.
 
 ```php
-Cast::toInt("42");   // 42
-Cast::toInt(3.7);    // 4 (rounded)
-Cast::toInt(null);   // 0
+Cast::toInt("42");        // 42
+Cast::toInt(3.7);         // 4 (rounded)
+Cast::toInt(null);        // 0
+Cast::toInt("hello");     // 0
+Cast::toInt(INF);         // 0
 ```
 
 | Input Type | Input Value       | Output         |
@@ -199,27 +215,28 @@ Cast::toInt(null);   // 0
 | string     | `"  42  "`        | `42` (trimmed) |
 | string     | `"3.14"`          | `3` (rounded)  |
 | string     | `"1e3"`           | `1000`         |
-| float      | `INF`             | CastException  |
-| float      | `NAN`             | CastException  |
-| float      | `1e20` (overflow) | CastException  |
-| string     | `""`              | CastException  |
-| string     | `"hello"`         | CastException  |
-| string     | `"42abc"`         | CastException  |
-| string     | out of int range  | CastException  |
-| array      | `[1, 2, 3]`       | CastException  |
-| object     | `stdClass`        | CastException  |
-| resource   | `fopen(...)`      | CastException  |
+| float      | `INF`             | `0`            |
+| float      | `NAN`             | `0`            |
+| float      | `1e20` (overflow) | `0`            |
+| string     | `""`              | `0`            |
+| string     | `"hello"`         | `0`            |
+| string     | `"42abc"`         | `0`            |
+| string     | out of int range  | `0`            |
+| array      | `[1, 2, 3]`       | `0`            |
+| object     | `stdClass`        | `0`            |
+| resource   | `fopen(...)`      | `0`            |
 
 ---
 
 ## `Cast::toFloat(mixed $value): float`
 
-Converts values to floating-point numbers with validation.
+Converts values to floating-point numbers. Returns `0.0` for values that cannot be cast.
 
 ```php
-Cast::toFloat("3.14");   // 3.14
-Cast::toFloat(42);       // 42.0
-Cast::toFloat(true);     // 1.0
+Cast::toFloat("3.14");    // 3.14
+Cast::toFloat(42);        // 42.0
+Cast::toFloat(true);      // 1.0
+Cast::toFloat("hello");   // 0.0
 ```
 
 | Input Type | Input Value  | Output           |
@@ -239,23 +256,25 @@ Cast::toFloat(true);     // 1.0
 | string     | `"42"`       | `42.0`           |
 | string     | `"1e3"`      | `1000.0`         |
 | string     | `"-2.5"`     | `-2.5`           |
-| string     | `""`         | CastException    |
-| string     | `"hello"`    | CastException    |
-| string     | `"42abc"`    | CastException    |
-| array      | `[1, 2, 3]`  | CastException    |
-| object     | `stdClass`   | CastException    |
-| resource   | `fopen(...)` | CastException    |
+| string     | `""`         | `0.0`            |
+| string     | `"hello"`    | `0.0`            |
+| string     | `"42abc"`    | `0.0`            |
+| array      | `[1, 2, 3]`  | `0.0`            |
+| object     | `stdClass`   | `0.0`            |
+| resource   | `fopen(...)` | `0.0`            |
 
 ---
 
 ## `Cast::toBool(mixed $value): bool`
 
-Strict boolean conversion with explicit allowed values only.
+Strict boolean conversion with explicit allowed values. Returns `false` for values that cannot be interpreted unambiguously.
 
 ```php
 Cast::toBool("yes");   // true
 Cast::toBool(0);       // false
 Cast::toBool(null);    // false
+Cast::toBool("maybe"); // false
+Cast::toBool(42);      // false
 ```
 
 | Input Type | Input Value  | Output                             |
@@ -281,21 +300,21 @@ Cast::toBool(null);    // false
 | string     | `"f"`        | `false`                            |
 | string     | `""`         | `false`                            |
 | string     | `"  TRUE  "` | `true` (trimmed, case-insensitive) |
-| int        | `2`          | CastException                      |
-| int        | `-1`         | CastException                      |
-| float      | `3.14`       | CastException                      |
-| float      | `-1.0`       | CastException                      |
-| string     | `"hello"`    | CastException                      |
-| string     | `"2"`        | CastException                      |
-| array      | `[1, 2, 3]`  | CastException                      |
-| object     | `stdClass`   | CastException                      |
-| resource   | `fopen(...)` | CastException                      |
+| int        | `2`          | `false`                            |
+| int        | `-1`         | `false`                            |
+| float      | `3.14`       | `false`                            |
+| float      | `-1.0`       | `false`                            |
+| string     | `"hello"`    | `false`                            |
+| string     | `"2"`        | `false`                            |
+| array      | `[1, 2, 3]`  | `false`                            |
+| object     | `stdClass`   | `false`                            |
+| resource   | `fopen(...)` | `false`                            |
 
 ---
 
 ## `Cast::toArray(mixed $value): array`
 
-Intelligent array conversion with multiple strategies for different types.
+Intelligent array conversion with multiple strategies for different types. Returns `[]` for values that cannot be cast.
 
 ```php
 Cast::toArray('{"a":1}');   // ["a" => 1]
@@ -319,18 +338,19 @@ Cast::toArray(null);        // []
 | object     | `Traversable`    | `iterator_to_array()` result         |
 | object     | with `toArray()` | `toArray()` result                   |
 | object     | `stdClass{a:1}`  | `["a" => 1]` (via `get_object_vars`) |
-| resource   | `fopen(...)`     | CastException                        |
+| resource   | `fopen(...)`     | `[]`                                 |
 
 ---
 
 ## `Cast::toJson(mixed $value, int $flags = ..., int $depth = 512): string`
 
-Type-safe JSON encoding with comprehensive validation and error handling.
+Type-safe JSON encoding. Returns `'{}'` when encoding fails (INF/NAN, invalid UTF-8, depth exceeded, resources, etc.).
 
 ```php
 Cast::toJson(['name' => 'John']);   // '{"name":"John"}'
 Cast::toJson(true);                 // 'true'
 Cast::toJson(null);                 // 'null'
+Cast::toJson(INF);                  // '{}'
 ```
 
 | Input Type | Input Value                     | Output                |
@@ -348,11 +368,11 @@ Cast::toJson(null);                 // 'null'
 | object     | `JsonSerializable`              | via `jsonSerialize()` |
 | object     | with `toArray()`                | via `toArray()`       |
 | object     | `stdClass{a:1}`                 | `"{\"a\":1}"`         |
-| float      | `INF`                           | CastException         |
-| float      | `NAN`                           | CastException         |
-| (any)      | depth < 1                       | CastException         |
-| object     | `toArray()` not returning array | CastException         |
-| resource   | `fopen(...)`                    | CastException         |
+| float      | `INF`                           | `"{}"`                |
+| float      | `NAN`                           | `"{}"`                |
+| (any)      | depth < 1                       | `"{}"`                |
+| object     | `toArray()` not returning array | `"{}"`                |
+| resource   | `fopen(...)`                    | `"{}"`                |
 
 **Default flags:** `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE`
 
@@ -360,15 +380,17 @@ Cast::toJson(null);                 // 'null'
 
 ## Error Handling
 
-All methods throw `CastException` for invalid inputs:
+This library never throws exceptions. When a value cannot be cast to the target type, a documented default value is returned instead:
 
 ```php
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 
-try {
-    $result = Cast::toInt($userInput);
-} catch (CastException $e) {
-    error_log($e->getMessage());
-}
+$int   = Cast::toInt($userInput);   // 0 if not castable
+$str   = Cast::toString($userInput); // '' if not castable
+$bool  = Cast::toBool($userInput);   // false if not castable
+$float = Cast::toFloat($userInput);  // 0.0 if not castable
+$arr   = Cast::toArray($userInput);  // [] if not castable
+$json  = Cast::toJson($userInput);   // '{}' if not castable
 ```
+
+Because no exceptions are thrown, there is no need for `try`/`catch` blocks around cast calls.

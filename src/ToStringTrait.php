@@ -10,14 +10,12 @@ use Stringable;
  */
 trait ToStringTrait
 {
-    private const string ERR_CANNOT_CAST_TO_STRING = 'Value of type %s cannot be cast to string.';
-
     /**
      * Casts a value to string.
      *
      * Converts the input value to its string representation following explicit,
-     * predictable rules. Unlike PHP's native (string) cast, this method provides
-     * clear behavior for all types and throws exceptions for non-convertible values.
+     * predictable rules. Values that cannot be converted (arrays, resources,
+     * objects without __toString) return an empty string.
      *
      * Conversion Rules:
      * -----------------
@@ -36,13 +34,13 @@ trait ToStringTrait
      * | bool       | false                  | "0"            |
      * | null       | null                   | ""             |
      * | object     | (with __toString)      | __toString()   |
-     * | object     | stdClass               | CastException  |
-     * | array      | [1, 2, 3]              | CastException  |
-     * | resource   | fopen(...)             | CastException  |
+     * | object     | stdClass               | ""             |
+     * | array      | [1, 2, 3]              | ""             |
+     * | resource   | fopen(...)             | ""             |
      *
      * @param mixed $value The value to convert
      *
-     * @return string The cast string
+     * @return string The cast string, or "" if the value cannot be cast
      */
     public static function toString(mixed $value): string
     {
@@ -68,6 +66,6 @@ trait ToStringTrait
             return $value->__toString();
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_STRING, $value);
+        return self::EMPTY_STRING;
     }
 }

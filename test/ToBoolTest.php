@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CtwTest\Cast;
 
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -55,29 +54,25 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that integer two throws exception
+     * Test that integer two is converted to false
      */
-    public function testToBoolThrowsExceptionForIntegerTwo(): void
+    public function testToBoolConvertsIntegerTwoToFalse(): void
     {
-        $input = 2;
+        $input  = 2;
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('only 0 and 1 are accepted');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
-     * Test that negative integer throws exception
+     * Test that negative integer is converted to false
      */
-    public function testToBoolThrowsExceptionForNegativeInteger(): void
+    public function testToBoolConvertsNegativeIntegerToFalse(): void
     {
-        $input = -1;
+        $input  = -1;
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('only 0 and 1 are accepted');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
@@ -103,16 +98,14 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that float 1.5 throws exception
+     * Test that float 1.5 is converted to false
      */
-    public function testToBoolThrowsExceptionForFloatOnePointFive(): void
+    public function testToBoolConvertsFloatOnePointFiveToFalse(): void
     {
-        $input = 1.5;
+        $input  = 1.5;
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('only 0.0 and 1.0 are accepted');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
@@ -314,29 +307,25 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that invalid string throws exception
+     * Test that invalid string is converted to false
      */
-    public function testToBoolThrowsExceptionForInvalidString(): void
+    public function testToBoolConvertsInvalidStringToFalse(): void
     {
-        $input = 'maybe';
+        $input  = 'maybe';
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to bool');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
-     * Test that numeric string other than 0 or 1 throws exception
+     * Test that numeric string other than 0 or 1 is converted to false
      */
-    public function testToBoolThrowsExceptionForNumericStringOtherThanZeroOrOne(): void
+    public function testToBoolConvertsNumericStringOtherThanZeroOrOneToFalse(): void
     {
-        $input = '2';
+        $input  = '2';
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to bool');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
@@ -351,29 +340,25 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that array throws exception
+     * Test that array is converted to false
      */
-    public function testToBoolThrowsExceptionForArray(): void
+    public function testToBoolConvertsArrayToFalse(): void
     {
-        $input = [true, false];
+        $input  = [true, false];
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to bool');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
-     * Test that object throws exception
+     * Test that object is converted to false
      */
-    public function testToBoolThrowsExceptionForObject(): void
+    public function testToBoolConvertsObjectToFalse(): void
     {
-        $input = new stdClass();
+        $input  = new stdClass();
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to bool');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
@@ -487,41 +472,60 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string with whitespace and invalid value throws exception
+     * Test that string with whitespace and invalid value is converted to false
      */
-    public function testToBoolThrowsExceptionForStringWithWhitespaceAndInvalidValue(): void
+    public function testToBoolConvertsStringWithWhitespaceAndInvalidValueToFalse(): void
     {
-        $input = '  invalid  ';
+        $input  = '  invalid  ';
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('cannot be cast to bool');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
-     * Test that positive float other than 1.0 throws exception
+     * Test that positive float other than 1.0 is converted to false
      */
-    public function testToBoolThrowsExceptionForPositiveFloatOtherThanOne(): void
+    public function testToBoolConvertsPositiveFloatOtherThanOneToFalse(): void
     {
-        $input = 2.0;
+        $input  = 2.0;
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('only 0.0 and 1.0 are accepted');
-
-        Cast::toBool($input);
+        self::assertFalse($actual);
     }
 
     /**
-     * Test that negative float throws exception
+     * Test that negative float is converted to false
      */
-    public function testToBoolThrowsExceptionForNegativeFloat(): void
+    public function testToBoolConvertsNegativeFloatToFalse(): void
     {
-        $input = -1.0;
+        $input  = -1.0;
+        $actual = Cast::toBool($input);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('only 0.0 and 1.0 are accepted');
+        self::assertFalse($actual);
+    }
 
-        Cast::toBool($input);
+    /**
+     * Test that PHP_INT_MAX (neither 1 nor 0) is converted to false.
+     */
+    public function testToBoolConvertsMaxIntToFalse(): void
+    {
+        $input  = PHP_INT_MAX;
+        $actual = Cast::toBool($input);
+
+        self::assertFalse($actual);
+    }
+
+    /**
+     * Test that closed resource is converted to false.
+     */
+    public function testToBoolConvertsClosedResourceToFalse(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+        fclose($resource);
+
+        $actual = Cast::toBool($resource);
+
+        self::assertFalse($actual);
     }
 }

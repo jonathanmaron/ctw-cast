@@ -5,11 +5,9 @@ namespace CtwTest\Cast;
 
 use ArrayObject;
 use Ctw\Cast\Cast;
-use Ctw\Cast\Exception\CastException;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Traversable;
 
 final class ToArrayTest extends TestCase
 {
@@ -623,20 +621,58 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that resource throws exception
+     * Test that resource is converted to empty array
      */
-    public function testToArrayThrowsExceptionForResource(): void
+    public function testToArrayConvertsResourceToEmptyArray(): void
     {
         $resource = fopen('php://memory', 'r');
         self::assertIsResource($resource);
 
-        $this->expectException(CastException::class);
-        $this->expectExceptionMessage('Value of type resource (stream) cannot be cast to array.');
-
         try {
-            Cast::toArray($resource);
+            $actual = Cast::toArray($resource);
         } finally {
             fclose($resource);
         }
+
+        self::assertSame([], $actual);
+    }
+
+    /**
+     * Test that JSON string decoding to a scalar is wrapped rather than returned raw.
+     *
+     * When JSON decodes to a non-array (e.g. a number or a quoted string), the
+     * method falls through to wrapping the original string in an array.
+     */
+    public function testToArrayWrapsJsonStringDecodingToScalar(): void
+    {
+        $input  = '[123]';
+        $actual = Cast::toArray($input);
+
+        self::assertSame([123], $actual);
+    }
+
+    /**
+     * Test that JSON string starting with bracket but decoding to null is wrapped.
+     */
+    public function testToArrayWrapsJsonStringStartingWithBracketAndDecodingToNull(): void
+    {
+        $input  = '[null][';
+        $actual = Cast::toArray($input);
+
+        self::assertSame(['[null]['], $actual);
+    }
+
+    /**
+     * Test that closed resource is converted to empty array.
+     */
+    public function testToArrayConvertsClosedResourceToEmptyArray(): void
+    {
+        $resource = fopen('php://memory', 'r');
+        self::assertIsResource($resource);
+        fclose($resource);
+
+        $actual = Cast::toArray($resource);
+
+        self::assertSame([], $actual);
     }
 }

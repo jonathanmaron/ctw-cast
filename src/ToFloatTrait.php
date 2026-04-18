@@ -8,18 +8,11 @@ namespace Ctw\Cast;
  */
 trait ToFloatTrait
 {
-    private const string ERR_EMPTY_STRING_TO_FLOAT       = 'Empty string cannot be cast to float.';
-
-    private const string ERR_NON_NUMERIC_STRING_TO_FLOAT = 'String value "%s" is not numeric and cannot be cast to float.';
-
-    private const string ERR_CANNOT_CAST_TO_FLOAT        = 'Value of type %s cannot be cast to float.';
-
     /**
      * Casts a value to float.
      *
-     * Converts the input value to a float with validation. Unlike PHP's native
-     * (float) cast, this method validates input and throws exceptions for
-     * invalid or non-convertible values.
+     * Converts the input value to a float. Values that cannot be interpreted
+     * as a float return 0.0.
      *
      * Conversion Rules:
      * -----------------
@@ -40,12 +33,12 @@ trait ToFloatTrait
      * | string     | "42"                   | 42.0           |
      * | string     | "1e3"                  | 1000.0         |
      * | string     | "-2.5"                 | -2.5           |
-     * | string     | ""                     | CastException  |
-     * | string     | "hello"                | CastException  |
-     * | string     | "42abc"                | CastException  |
-     * | array      | [1, 2, 3]              | CastException  |
-     * | object     | stdClass               | CastException  |
-     * | resource   | fopen(...)             | CastException  |
+     * | string     | ""                     | 0.0            |
+     * | string     | "hello"                | 0.0            |
+     * | string     | "42abc"                | 0.0            |
+     * | array      | [1, 2, 3]              | 0.0            |
+     * | object     | stdClass               | 0.0            |
+     * | resource   | fopen(...)             | 0.0            |
      *
      * Special Float Values:
      * ---------------------
@@ -54,7 +47,7 @@ trait ToFloatTrait
      *
      * @param mixed $value The value to convert
      *
-     * @return float The cast float
+     * @return float The cast float, or 0.0 if the value cannot be cast
      */
     public static function toFloat(mixed $value): float
     {
@@ -67,25 +60,25 @@ trait ToFloatTrait
         }
 
         if (is_bool($value)) {
-            return $value ? self::FLOAT_TRUE : self::FLOAT_FALSE;
+            return $value ? self::FLOAT_TRUE : self::EMPTY_FLOAT;
         }
 
         if (null === $value) {
-            return self::FLOAT_FALSE;
+            return self::EMPTY_FLOAT;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
             if (self::EMPTY_STRING === $trimmed) {
-                self::throwCastException(self::ERR_EMPTY_STRING_TO_FLOAT);
+                return self::EMPTY_FLOAT;
             }
             if (!is_numeric($trimmed)) {
-                self::throwCastException(self::ERR_NON_NUMERIC_STRING_TO_FLOAT, $trimmed);
+                return self::EMPTY_FLOAT;
             }
 
             return (float) $trimmed;
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_FLOAT, $value);
+        return self::EMPTY_FLOAT;
     }
 }

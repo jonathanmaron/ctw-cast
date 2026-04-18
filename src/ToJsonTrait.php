@@ -11,30 +11,13 @@ use JsonSerializable;
  */
 trait ToJsonTrait
 {
-    private const string ERR_DEPTH_INVALID            = 'Depth must be at least 1, got %d.';
-
-    private const string ERR_ENCODE_FAILED            = 'Failed to encode %s to JSON: %s';
-
-    private const string ERR_FLOAT_INFINITE           = 'Float value INF cannot be cast to JSON (JSON does not support infinite values).';
-
-    private const string ERR_FLOAT_NAN                = 'Float value NAN cannot be cast to JSON (JSON does not support NaN values).';
-
-    private const string ERR_JSON_SERIALIZABLE_FAILED = 'Failed to encode JsonSerializable object of type %s to JSON: %s';
-
-    private const string ERR_TO_ARRAY_NOT_ARRAY       = 'Object of type %s has toArray() method but it did not return an array.';
-
-    private const string ERR_TO_ARRAY_ENCODE_FAILED   = 'Failed to encode object of type %s to JSON via toArray(): %s';
-
-    private const string ERR_OBJECT_ENCODE_FAILED     = 'Failed to encode object of type %s to JSON: %s';
-
-    private const string ERR_CANNOT_CAST_TO_JSON      = 'Value of type %s cannot be cast to JSON.';
-
     /**
      * Casts a value to JSON string.
      *
      * Converts the input value to a valid JSON string representation. Handles all
      * scalar types, arrays, and objects with multiple conversion strategies.
-     * JSON_THROW_ON_ERROR is always enforced internally for consistent exception handling.
+     * When a value cannot be encoded (INF/NAN, invalid UTF-8, depth exceeded,
+     * resources, or toArray() returning a non-array) the method returns "{}".
      *
      * Conversion Rules:
      * -----------------
@@ -53,9 +36,9 @@ trait ToJsonTrait
      * | object             | JsonSerializable           | via jsonSerialize()       |
      * | object             | (with toArray())           | via toArray()             |
      * | object             | stdClass{a:1}              | "{\"a\":1}"               |
-     * | float              | INF                        | CastException             |
-     * | float              | NAN                        | CastException             |
-     * | resource           | fopen(...)                 | CastException             |
+     * | float              | INF                        | "{}"                      |
+     * | float              | NAN                        | "{}"                      |
+     * | resource           | fopen(...)                 | "{}"                      |
      *
      * Object Conversion Priority:
      * ---------------------------
@@ -67,13 +50,14 @@ trait ToJsonTrait
      * --------------
      * - JSON_UNESCAPED_SLASHES: Forward slashes are not escaped
      * - JSON_UNESCAPED_UNICODE: Unicode characters are not escaped to \uXXXX
-     * - JSON_THROW_ON_ERROR: Always enforced internally to catch encoding errors (cannot be disabled)
+     * - JSON_THROW_ON_ERROR: Always enforced internally to detect encoding errors
+     *   (cannot be disabled; failures are caught and converted to "{}")
      *
      * @param mixed $value The value to convert
      * @param int   $flags JSON encoding flags (default: JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
      * @param int   $depth Maximum depth for JSON encoding (default: 512, minimum: 1)
      *
-     * @return string The JSON encoded string
+     * @return string The JSON encoded string, or "{}" if the value cannot be cast
      */
     public static function toJson(
         mixed $value,
@@ -82,7 +66,7 @@ trait ToJsonTrait
     ): string {
 
         if (1 > $depth) {
-            self::throwCastException(self::ERR_DEPTH_INVALID, $depth);
+            return self::EMPTY_JSON;
         }
 
         if (null === $value) {
@@ -97,17 +81,14 @@ trait ToJsonTrait
                 assert(is_string($result));
 
                 return $result;
-            } catch (JsonException $jsonException) {
-                self::throwCastException(self::ERR_ENCODE_FAILED, get_debug_type($value), $jsonException->getMessage());
+            } catch (JsonException) {
+                return self::EMPTY_JSON;
             }
         }
 
         if (is_float($value)) {
-            if (is_infinite($value)) {
-                self::throwCastException(self::ERR_FLOAT_INFINITE);
-            }
-            if (is_nan($value)) {
-                self::throwCastException(self::ERR_FLOAT_NAN);
+            if (is_infinite($value) || is_nan($value)) {
+                return self::EMPTY_JSON;
             }
 
             $result = json_encode($value, $flags, $depth);
@@ -123,15 +104,15 @@ trait ToJsonTrait
                     assert(is_string($result));
 
                     return $result;
-                } catch (JsonException $jsonException) {
-                    self::throwCastException(self::ERR_JSON_SERIALIZABLE_FAILED, $value, $jsonException->getMessage());
+                } catch (JsonException) {
+                    return self::EMPTY_JSON;
                 }
             }
 
             if (method_exists($value, 'toArray')) {
                 $arrayValue = $value->toArray();
                 if (!is_array($arrayValue)) {
-                    self::throwCastException(self::ERR_TO_ARRAY_NOT_ARRAY, $value);
+                    return self::EMPTY_JSON;
                 }
 
                 try {
@@ -139,8 +120,8 @@ trait ToJsonTrait
                     assert(is_string($result));
 
                     return $result;
-                } catch (JsonException $jsonException) {
-                    self::throwCastException(self::ERR_TO_ARRAY_ENCODE_FAILED, $value, $jsonException->getMessage());
+                } catch (JsonException) {
+                    return self::EMPTY_JSON;
                 }
             }
 
@@ -149,11 +130,11 @@ trait ToJsonTrait
                 assert(is_string($result));
 
                 return $result;
-            } catch (JsonException $jsonException) {
-                self::throwCastException(self::ERR_OBJECT_ENCODE_FAILED, $value, $jsonException->getMessage());
+            } catch (JsonException) {
+                return self::EMPTY_JSON;
             }
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_JSON, $value);
+        return self::EMPTY_JSON;
     }
 }

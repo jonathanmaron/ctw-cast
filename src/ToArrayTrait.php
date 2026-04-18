@@ -11,16 +11,14 @@ use Traversable;
  */
 trait ToArrayTrait
 {
-    private const string ERR_CANNOT_CAST_TO_ARRAY = 'Value of type %s cannot be cast to array.';
-
-    private const array  JSON_START_CHARS         = ['{', '['];
+    private const array JSON_START_CHARS = ['{', '['];
 
     /**
      * Casts a value to array.
      *
      * Converts the input value to an array with intelligent handling of different
      * types. Supports JSON string parsing, object conversion via multiple strategies,
-     * and wrapping of scalar values.
+     * and wrapping of scalar values. Values that cannot be cast return an empty array.
      *
      * Conversion Rules:
      * -----------------
@@ -40,7 +38,7 @@ trait ToArrayTrait
      * | object             | ArrayIterator([1,2])       | [1, 2] (via iterator)     |
      * | object             | (with toArray())           | toArray() result          |
      * | object             | stdClass{a:1, b:2}         | ["a" => 1, "b" => 2]      |
-     * | resource           | fopen(...)                 | CastException             |
+     * | resource           | fopen(...)                 | []                        |
      *
      * Object Conversion Priority:
      * ---------------------------
@@ -56,7 +54,7 @@ trait ToArrayTrait
      *
      * @param mixed $value The value to convert
      *
-     * @return array<array-key, mixed> The cast array
+     * @return array<array-key, mixed> The cast array, or [] if the value cannot be cast
      */
     public static function toArray(mixed $value): array
     {
@@ -65,14 +63,14 @@ trait ToArrayTrait
         }
 
         if (null === $value) {
-            return [];
+            return self::EMPTY_ARRAY;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
 
             if (self::EMPTY_STRING === $trimmed) {
-                return [];
+                return self::EMPTY_ARRAY;
             }
 
             if (in_array($trimmed[0], self::JSON_START_CHARS, true)) {
@@ -107,6 +105,6 @@ trait ToArrayTrait
             return [$value];
         }
 
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_ARRAY, $value);
+        return self::EMPTY_ARRAY;
     }
 }

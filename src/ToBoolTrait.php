@@ -8,24 +8,14 @@ namespace Ctw\Cast;
  */
 trait ToBoolTrait
 {
-    private const string ERR_INT_CANNOT_CAST_TO_BOOL    = 'Integer value %d cannot be cast to bool (only 0 and 1 are accepted).';
-
-    private const string ERR_FLOAT_CANNOT_CAST_TO_BOOL  = 'Float value %s cannot be cast to bool (only 0.0 and 1.0 are accepted).';
-
-    private const string ERR_STRING_CANNOT_CAST_TO_BOOL = 'String value "%s" cannot be cast to bool.';
-
-    private const string ERR_CANNOT_CAST_TO_BOOL        = 'Value of type %s cannot be cast to bool.';
-
-    private const array  TRUTHY_STRINGS                 = ['true', '1', 'yes', 'on', 'y', 't'];
-
-    private const array  FALSY_STRINGS                  = ['false', '0', 'no', 'off', 'n', 'f'];
+    private const array TRUTHY_STRINGS = ['true', '1', 'yes', 'on', 'y', 't'];
 
     /**
      * Casts a value to boolean.
      *
-     * Converts the input value to a boolean with strict validation. Unlike PHP's
-     * native (bool) cast which accepts any value, this method only accepts specific
-     * values that have clear boolean semantics and throws exceptions for ambiguous cases.
+     * Converts the input value to a boolean. Unlike PHP's native (bool) cast which
+     * accepts any value, this method only treats specific values as true or false
+     * and returns false for any value that cannot be interpreted unambiguously.
      *
      * Conversion Rules:
      * -----------------
@@ -52,15 +42,15 @@ trait ToBoolTrait
      * | string     | ""                     | false          |
      * | string     | "  TRUE  "             | true (trimmed) |
      * | null       | null                   | false          |
-     * | int        | 42                     | CastException  |
-     * | int        | -1                     | CastException  |
-     * | float      | 3.14                   | CastException  |
-     * | float      | -1.0                   | CastException  |
-     * | string     | "hello"                | CastException  |
-     * | string     | "2"                    | CastException  |
-     * | array      | [1, 2, 3]              | CastException  |
-     * | object     | stdClass               | CastException  |
-     * | resource   | fopen(...)             | CastException  |
+     * | int        | 42                     | false          |
+     * | int        | -1                     | false          |
+     * | float      | 3.14                   | false          |
+     * | float      | -1.0                   | false          |
+     * | string     | "hello"                | false          |
+     * | string     | "2"                    | false          |
+     * | array      | [1, 2, 3]              | false          |
+     * | object     | stdClass               | false          |
+     * | resource   | fopen(...)             | false          |
      *
      * String Handling:
      * ----------------
@@ -70,7 +60,7 @@ trait ToBoolTrait
      *
      * @param mixed $value The value to convert
      *
-     * @return bool The cast boolean
+     * @return bool The cast boolean, or false if the value cannot be cast
      */
     public static function toBool(mixed $value): bool
     {
@@ -80,39 +70,24 @@ trait ToBoolTrait
 
         if (is_int($value)) {
             return match ($value) {
-                self::INT_TRUE  => true,
-                self::INT_FALSE => false,
-                default         => self::throwCastException(self::ERR_INT_CANNOT_CAST_TO_BOOL, $value),
+                self::INT_TRUE  => self::BOOL_TRUE,
+                default         => self::EMPTY_BOOL,
             };
         }
 
         if (is_float($value)) {
             return match ($value) {
-                self::FLOAT_TRUE  => true,
-                self::FLOAT_FALSE => false,
-                default           => self::throwCastException(self::ERR_FLOAT_CANNOT_CAST_TO_BOOL, $value),
+                self::FLOAT_TRUE  => self::BOOL_TRUE,
+                default           => self::EMPTY_BOOL,
             };
         }
 
         if (is_string($value)) {
-
             $lower = strtolower(trim($value));
 
-            if (in_array($lower, self::TRUTHY_STRINGS, true)) {
-                return true;
-            }
-
-            if (self::EMPTY_STRING === $lower || in_array($lower, self::FALSY_STRINGS, true)) {
-                return false;
-            }
-
-            self::throwCastException(self::ERR_STRING_CANNOT_CAST_TO_BOOL, $value);
+            return in_array($lower, self::TRUTHY_STRINGS, true) ? self::BOOL_TRUE : self::EMPTY_BOOL;
         }
 
-        if (null === $value) {
-            return false;
-        }
-
-        self::throwCastException(self::ERR_CANNOT_CAST_TO_BOOL, $value);
+        return self::EMPTY_BOOL;
     }
 }
