@@ -6,7 +6,7 @@
 [![Scrutinizer Quality](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jonathanmaron/ctw-cast/?branch=master)
 
-Type-safe, exception-free casting utility for PHP 8.3+ applications.
+Type-safe, exception-free casting utility for PHP 8.5+ applications.
 
 ## Introduction
 
@@ -131,7 +131,7 @@ $count  = Cast::toInt($result);
 
 ## Requirements
 
-- PHP 8.3 or higher
+- PHP 8.5 or higher
 - strict_types enabled
 
 ## Installation
