@@ -27,7 +27,7 @@ return (static function (): ECSConfigBuilder {
 
     $ecsConfig = ECSConfig::configure()
         ->withFileExtensions($fileExtensions())
-        ->withSpacing(indentation: $indentation(), lineEnding: $lineEnding())
+        ->withSpacing($indentation(), $lineEnding())
         ->withPaths([
             sprintf('%s/bin', __DIR__),
             sprintf('%s/src', __DIR__),
