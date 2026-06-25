@@ -16,6 +16,7 @@ use Symplify\EasyCodingStandard\Configuration\ECSConfigBuilder;
 // named $ecsConfig. Building at file scope would clobber it; the closure keeps
 // every local contained.
 return (static function (): ECSConfigBuilder {
+
     $fileExtensions = new DefaultFileExtensions();
     $indentation    = new DefaultIndentation();
     $lineEnding     = new DefaultLineEnding();
