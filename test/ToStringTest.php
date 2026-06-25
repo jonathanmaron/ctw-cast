@@ -320,6 +320,99 @@ final class ToStringTest extends TestCase
     }
 
     /**
+     * Test that converting NAN raises no PHP warning.
+     *
+     * PHP 8.5 emits an E_WARNING ("unexpected NAN value was coerced to string")
+     * when NAN is cast with (string). The non-finite guard must avoid that cast.
+     */
+    public function testToStringConvertsNaNWithoutRaisingWarning(): void
+    {
+        $actual = '';
+        $errors = $this->captureErrors(static function () use (&$actual): void {
+            $actual = Cast::toString(NAN);
+        });
+
+        self::assertSame('NAN', $actual);
+        self::assertSame([], $errors);
+    }
+
+    /**
+     * Test that converting INF raises no PHP warning.
+     *
+     * PHP 8.5 emits an E_WARNING when INF is cast with (string). The non-finite
+     * guard must avoid that cast.
+     */
+    public function testToStringConvertsInfinityWithoutRaisingWarning(): void
+    {
+        $actual = '';
+        $errors = $this->captureErrors(static function () use (&$actual): void {
+            $actual = Cast::toString(INF);
+        });
+
+        self::assertSame('INF', $actual);
+        self::assertSame([], $errors);
+    }
+
+    /**
+     * Test that converting negative INF raises no PHP warning.
+     */
+    public function testToStringConvertsNegativeInfinityWithoutRaisingWarning(): void
+    {
+        $actual = '';
+        $errors = $this->captureErrors(static function () use (&$actual): void {
+            $actual = Cast::toString(-INF);
+        });
+
+        self::assertSame('-INF', $actual);
+        self::assertSame([], $errors);
+    }
+
+    /**
+     * Test that a computed NAN (not the literal constant) is converted to string.
+     *
+     * Confirms the guard relies on is_nan() rather than identity with the NAN
+     * constant.
+     */
+    public function testToStringConvertsComputedNaNToString(): void
+    {
+        $input = INF - INF;
+        self::assertNan($input);
+
+        $actual = Cast::toString($input);
+
+        self::assertSame('NAN', $actual);
+    }
+
+    /**
+     * Test that a computed INF (float overflow) is converted to string.
+     *
+     * Confirms the guard relies on is_finite() rather than identity with the INF
+     * constant.
+     */
+    public function testToStringConvertsComputedInfinityToString(): void
+    {
+        $input = PHP_FLOAT_MAX * 2.0;
+        self::assertInfinite($input);
+
+        $actual = Cast::toString($input);
+
+        self::assertSame('INF', $actual);
+    }
+
+    /**
+     * Test that a computed negative INF (float overflow) is converted to string.
+     */
+    public function testToStringConvertsComputedNegativeInfinityToString(): void
+    {
+        $input = -PHP_FLOAT_MAX * 2.0;
+        self::assertInfinite($input);
+
+        $actual = Cast::toString($input);
+
+        self::assertSame('-INF', $actual);
+    }
+
+    /**
      * Test that Stringable object returning an empty string yields an empty string.
      */
     public function testToStringConvertsStringableObjectReturningEmptyString(): void
@@ -348,5 +441,31 @@ final class ToStringTest extends TestCase
         $actual = Cast::toString($resource);
 
         self::assertSame('', $actual);
+    }
+
+    /**
+     * Run the given callback and collect any PHP error messages it raises.
+     *
+     * @param callable():void $callback
+     *
+     * @return list<string> the messages raised, in order (empty when none)
+     */
+    private function captureErrors(callable $callback): array
+    {
+        $errors = [];
+
+        set_error_handler(static function (int $errno, string $errstr) use (&$errors): bool {
+            $errors[] = $errstr;
+
+            return true;
+        });
+
+        try {
+            $callback();
+        } finally {
+            restore_error_handler();
+        }
+
+        return $errors;
     }
 }

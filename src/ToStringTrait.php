@@ -48,7 +48,19 @@ trait ToStringTrait
             return $value;
         }
 
-        if (is_int($value) || is_float($value)) {
+        if (is_int($value)) {
+            return (string) $value;
+        }
+
+        if (is_float($value)) {
+            if (!is_finite($value)) {
+                if (is_nan($value)) {
+                    return self::STRING_NAN;
+                }
+
+                return 0 < $value ? self::STRING_INF : self::STRING_NEG_INF;
+            }
+
             return (string) $value;
         }
 

@@ -40,4 +40,10 @@ final class Cast
     private const string STRING_TRUE  = '1';
 
     private const string STRING_FALSE = '0';
+
+    private const string STRING_NAN     = 'NAN';
+
+    private const string STRING_INF     = 'INF';
+
+    private const string STRING_NEG_INF = '-INF';
 }
