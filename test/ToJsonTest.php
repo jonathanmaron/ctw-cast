@@ -10,7 +10,7 @@ use stdClass;
 final class ToJsonTest extends TestCase
 {
     /**
-     * Test that null is converted to JSON null string
+     * Test that toJson returns the literal "null" when given null.
      */
     public function testToJsonConvertsNullToJsonNull(): void
     {
@@ -20,7 +20,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that string is converted to JSON string
+     * Test that toJson returns a quoted JSON string when given a plain string.
      */
     public function testToJsonConvertsStringToJsonString(): void
     {
@@ -31,7 +31,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that empty string is converted to JSON empty string
+     * Test that toJson returns a pair of quotes when given an empty string.
      */
     public function testToJsonConvertsEmptyStringToJsonEmptyString(): void
     {
@@ -42,7 +42,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that string with special characters is properly escaped
+     * Test that toJson escapes control and quote characters when given a string containing them.
      */
     public function testToJsonEscapesSpecialCharactersInString(): void
     {
@@ -53,7 +53,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that string with unicode characters is preserved
+     * Test that toJson leaves multibyte characters unescaped when given a Unicode string.
      */
     public function testToJsonPreservesUnicodeCharacters(): void
     {
@@ -64,7 +64,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that positive integer is converted to JSON number
+     * Test that toJson returns the number literal when given a positive integer.
      */
     public function testToJsonConvertsPositiveIntegerToJsonNumber(): void
     {
@@ -75,7 +75,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that negative integer is converted to JSON number
+     * Test that toJson returns the number literal when given a negative integer.
      */
     public function testToJsonConvertsNegativeIntegerToJsonNumber(): void
     {
@@ -86,7 +86,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that zero is converted to JSON zero
+     * Test that toJson returns "0" when given the integer zero.
      */
     public function testToJsonConvertsZeroToJsonZero(): void
     {
@@ -97,7 +97,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MAX is converted to JSON
+     * Test that toJson returns the number literal when given PHP_INT_MAX.
      */
     public function testToJsonConvertsPhpIntMaxToJson(): void
     {
@@ -108,7 +108,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MIN is converted to JSON
+     * Test that toJson returns the number literal when given PHP_INT_MIN.
      */
     public function testToJsonConvertsPhpIntMinToJson(): void
     {
@@ -119,7 +119,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that positive float is converted to JSON number
+     * Test that toJson returns the number literal when given a positive float.
      */
     public function testToJsonConvertsPositiveFloatToJsonNumber(): void
     {
@@ -130,7 +130,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that negative float is converted to JSON number
+     * Test that toJson returns the number literal when given a negative float.
      */
     public function testToJsonConvertsNegativeFloatToJsonNumber(): void
     {
@@ -141,7 +141,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that zero float is converted to JSON zero
+     * Test that toJson returns "0" when given the float zero.
      */
     public function testToJsonConvertsZeroFloatToJsonZero(): void
     {
@@ -152,7 +152,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that float with many decimals is converted
+     * Test that toJson preserves precision when given a float with many decimal places.
      */
     public function testToJsonConvertsFloatWithManyDecimals(): void
     {
@@ -163,7 +163,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that INF float is converted to empty JSON object
+     * Test that toJson returns "{}" when given positive infinity, which is not encodable.
      */
     public function testToJsonConvertsInfiniteFloatToEmptyObject(): void
     {
@@ -173,7 +173,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that negative INF float is converted to empty JSON object
+     * Test that toJson returns "{}" when given negative infinity, which is not encodable.
      */
     public function testToJsonConvertsNegativeInfiniteFloatToEmptyObject(): void
     {
@@ -183,7 +183,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that NAN float is converted to empty JSON object
+     * Test that toJson returns "{}" when given a NaN float, which is not encodable.
      */
     public function testToJsonConvertsNanFloatToEmptyObject(): void
     {
@@ -193,7 +193,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that true boolean is converted to JSON true
+     * Test that toJson returns "true" when given the boolean true.
      */
     public function testToJsonConvertsTrueBooleanToJsonTrue(): void
     {
@@ -204,7 +204,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that false boolean is converted to JSON false
+     * Test that toJson returns "false" when given the boolean false.
      */
     public function testToJsonConvertsFalseBooleanToJsonFalse(): void
     {
@@ -215,7 +215,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that empty array is converted to JSON empty array
+     * Test that toJson returns "[]" when given an empty array.
      */
     public function testToJsonConvertsEmptyArrayToJsonEmptyArray(): void
     {
@@ -226,7 +226,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that indexed array is converted to JSON array
+     * Test that toJson returns a JSON array when given a sequential indexed array.
      */
     public function testToJsonConvertsIndexedArrayToJsonArray(): void
     {
@@ -237,7 +237,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that associative array is converted to JSON object
+     * Test that toJson returns a JSON object when given an associative array.
      */
     public function testToJsonConvertsAssociativeArrayToJsonObject(): void
     {
@@ -252,7 +252,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that nested array is converted to JSON
+     * Test that toJson encodes the full structure when given a nested array.
      */
     public function testToJsonConvertsNestedArrayToJson(): void
     {
@@ -274,7 +274,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that array with mixed types is converted to JSON
+     * Test that toJson preserves each value's type when given an array of mixed types.
      */
     public function testToJsonConvertsArrayWithMixedTypesToJson(): void
     {
@@ -285,7 +285,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that stdClass object is converted to JSON
+     * Test that toJson encodes the public properties when given a populated stdClass object.
      */
     public function testToJsonConvertsStdClassObjectToJson(): void
     {
@@ -299,7 +299,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that empty stdClass object is converted to JSON
+     * Test that toJson returns "[]" when given an empty stdClass object.
      */
     public function testToJsonConvertsEmptyStdClassObjectToJson(): void
     {
@@ -310,7 +310,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that object with toArray method is converted to JSON
+     * Test that toJson encodes the method result when given an object exposing a toArray method.
      */
     public function testToJsonConvertsObjectWithToArrayMethodToJson(): void
     {
@@ -333,7 +333,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that JsonSerializable object is converted to JSON
+     * Test that toJson uses the serialized form when given a JsonSerializable object.
      */
     public function testToJsonConvertsJsonSerializableObjectToJson(): void
     {
@@ -356,7 +356,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that object with public properties is converted to JSON
+     * Test that toJson encodes the public properties when given a plain object without toArray or JsonSerializable.
      */
     public function testToJsonConvertsObjectWithPublicPropertiesToJson(): void
     {
@@ -372,7 +372,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that object with toArray returning non-array is converted to empty JSON object
+     * Test that toJson returns "{}" when given an object whose toArray returns a non-array.
      */
     public function testToJsonConvertsObjectWithToArrayReturningNonArrayToEmptyObject(): void
     {
@@ -389,7 +389,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that custom flags can be passed
+     * Test that toJson escapes forward slashes when given custom flags omitting JSON_UNESCAPED_SLASHES.
      */
     public function testToJsonAcceptsCustomFlags(): void
     {
@@ -404,7 +404,7 @@ final class ToJsonTest extends TestCase
     }
 
     /**
-     * Test that pretty print flag works
+     * Test that toJson produces indented output when given the JSON_PRETTY_PRINT flag.
      */
     public function testToJsonWithPrettyPrintFlag(): void
     {
@@ -424,7 +424,7 @@ JSON;
     }
 
     /**
-     * Test that custom depth can be passed
+     * Test that toJson encodes successfully when given a nested array within the default depth limit.
      */
     public function testToJsonAcceptsCustomDepth(): void
     {
@@ -442,7 +442,7 @@ JSON;
     }
 
     /**
-     * Test that exceeding max depth is converted to empty JSON object
+     * Test that toJson returns "{}" when given an array nested deeper than the configured depth.
      */
     public function testToJsonConvertsExceedingMaxDepthToEmptyObject(): void
     {
@@ -460,7 +460,7 @@ JSON;
     }
 
     /**
-     * Test that depth less than 1 is converted to empty JSON object
+     * Test that toJson returns "{}" when given a depth of zero, below the minimum of one.
      */
     public function testToJsonConvertsDepthLessThanOneToEmptyObject(): void
     {
@@ -470,7 +470,7 @@ JSON;
     }
 
     /**
-     * Test that negative depth is converted to empty JSON object
+     * Test that toJson returns "{}" when given a negative depth.
      */
     public function testToJsonConvertsNegativeDepthToEmptyObject(): void
     {
@@ -480,7 +480,7 @@ JSON;
     }
 
     /**
-     * Test that resource type is converted to empty JSON object
+     * Test that toJson returns "{}" when given an open resource.
      */
     public function testToJsonConvertsResourceTypeToEmptyObject(): void
     {
@@ -499,7 +499,7 @@ JSON;
     }
 
     /**
-     * Test that closed resource is converted to empty JSON object
+     * Test that toJson returns "{}" when given a closed resource.
      */
     public function testToJsonConvertsClosedResourceToEmptyObject(): void
     {
@@ -515,7 +515,7 @@ JSON;
     }
 
     /**
-     * Test that invalid UTF-8 string is converted to empty JSON object
+     * Test that toJson returns "{}" when given a string containing invalid UTF-8.
      */
     public function testToJsonConvertsInvalidUtf8StringToEmptyObject(): void
     {
@@ -527,7 +527,7 @@ JSON;
     }
 
     /**
-     * Test that object with only private properties is converted
+     * Test that toJson returns "[]" when given an object exposing no public properties.
      */
     public function testToJsonConvertsObjectWithPrivateProperties(): void
     {
@@ -540,7 +540,7 @@ JSON;
     }
 
     /**
-     * Test that JsonSerializable takes precedence over toArray
+     * Test that toJson prefers jsonSerialize when given an object implementing both JsonSerializable and toArray.
      */
     public function testToJsonPrefersJsonSerializableOverToArray(): void
     {
@@ -572,7 +572,7 @@ JSON;
     }
 
     /**
-     * Test that object without toArray or JsonSerializable uses get_object_vars
+     * Test that toJson falls back to public properties when given a plain object with neither toArray nor JsonSerializable.
      */
     public function testToJsonUsesGetObjectVarsForPlainObject(): void
     {
@@ -589,7 +589,7 @@ JSON;
     }
 
     /**
-     * Test that array with invalid UTF-8 is converted to empty JSON object
+     * Test that toJson returns "{}" when given an array containing invalid UTF-8.
      */
     public function testToJsonConvertsArrayWithInvalidUtf8ToEmptyObject(): void
     {
@@ -604,7 +604,7 @@ JSON;
     }
 
     /**
-     * Test that object with toArray returning array with invalid UTF-8 is converted to empty JSON object
+     * Test that toJson returns "{}" when given an object whose toArray returns an array with invalid UTF-8.
      */
     public function testToJsonConvertsObjectWithToArrayReturningInvalidUtf8ToEmptyObject(): void
     {
@@ -626,7 +626,7 @@ JSON;
     }
 
     /**
-     * Test that JsonSerializable with invalid UTF-8 is converted to empty JSON object
+     * Test that toJson returns "{}" when given a JsonSerializable object serializing invalid UTF-8.
      */
     public function testToJsonConvertsJsonSerializableWithInvalidUtf8ToEmptyObject(): void
     {
@@ -648,7 +648,7 @@ JSON;
     }
 
     /**
-     * Test that object with invalid UTF-8 in properties is converted to empty JSON object
+     * Test that toJson returns "{}" when given a plain object whose public properties contain invalid UTF-8.
      */
     public function testToJsonConvertsObjectWithInvalidUtf8PropertyToEmptyObject(): void
     {
@@ -662,7 +662,7 @@ JSON;
     }
 
     /**
-     * Test that very large float is converted correctly
+     * Test that toJson encodes the value when given a float near the maximum finite magnitude.
      */
     public function testToJsonConvertsVeryLargeFloat(): void
     {
@@ -673,7 +673,7 @@ JSON;
     }
 
     /**
-     * Test that very small float is converted correctly
+     * Test that toJson encodes the value when given a float near the smallest normal magnitude.
      */
     public function testToJsonConvertsVerySmallFloat(): void
     {
@@ -684,7 +684,7 @@ JSON;
     }
 
     /**
-     * Test minimal depth of 1 works
+     * Test that toJson encodes a flat structure successfully when given the minimum depth of one.
      */
     public function testToJsonWorksWithMinimalDepth(): void
     {
@@ -697,7 +697,7 @@ JSON;
     }
 
     /**
-     * Test that string encoding with invalid UTF-8 returns empty JSON object
+     * Test that toJson returns "{}" when given a string with invalid UTF-8 and custom flags.
      */
     public function testToJsonConvertsStringWithInvalidUtf8AndCustomFlagsToEmptyObject(): void
     {
@@ -709,7 +709,7 @@ JSON;
     }
 
     /**
-     * Test that array encoding with invalid UTF-8 returns empty JSON object
+     * Test that toJson returns "{}" when given an array with invalid UTF-8 and custom flags.
      */
     public function testToJsonConvertsArrayWithInvalidUtf8AndCustomFlagsToEmptyObject(): void
     {
@@ -723,7 +723,7 @@ JSON;
     }
 
     /**
-     * Test that float encoding works with custom flags
+     * Test that toJson encodes the number when given a float with custom flags of zero.
      */
     public function testToJsonHandlesFloatEncodingWithCustomFlags(): void
     {
@@ -734,7 +734,7 @@ JSON;
     }
 
     /**
-     * Test that bool encoding works with custom flags
+     * Test that toJson returns "true" when given the boolean true with custom flags of zero.
      */
     public function testToJsonHandlesBoolEncodingWithCustomFlags(): void
     {
@@ -743,7 +743,7 @@ JSON;
     }
 
     /**
-     * Test that int encoding works with custom flags
+     * Test that toJson returns the number literal when given an integer with custom flags of zero.
      */
     public function testToJsonHandlesIntEncodingWithCustomFlags(): void
     {
@@ -752,7 +752,7 @@ JSON;
     }
 
     /**
-     * Test JsonSerializable encoding failure with invalid UTF-8 returns empty JSON object
+     * Test that toJson returns "{}" when given a JsonSerializable object serializing invalid UTF-8 with custom flags.
      */
     public function testToJsonConvertsJsonSerializableEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
@@ -774,7 +774,7 @@ JSON;
     }
 
     /**
-     * Test object with toArray encoding failure with invalid UTF-8 returns empty JSON object
+     * Test that toJson returns "{}" when given an object whose toArray yields invalid UTF-8 with custom flags.
      */
     public function testToJsonConvertsObjectToArrayEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
@@ -796,7 +796,7 @@ JSON;
     }
 
     /**
-     * Test object with get_object_vars encoding failure with invalid UTF-8 returns empty JSON object
+     * Test that toJson returns "{}" when given a plain object with invalid UTF-8 properties and custom flags.
      */
     public function testToJsonConvertsObjectVarsEncodingFailureWithInvalidUtf8ToEmptyObject(): void
     {
@@ -809,7 +809,7 @@ JSON;
     }
 
     /**
-     * Test that valid string works with custom flags
+     * Test that toJson returns the quoted string when given a valid string with custom flags of zero.
      */
     public function testToJsonHandlesValidStringWithCustomFlags(): void
     {
@@ -818,7 +818,7 @@ JSON;
     }
 
     /**
-     * Test that valid array works without JSON_THROW_ON_ERROR
+     * Test that toJson encodes the array when given a valid array without the JSON_THROW_ON_ERROR flag.
      */
     public function testToJsonHandlesValidArrayWithoutThrowFlag(): void
     {
@@ -829,7 +829,7 @@ JSON;
     }
 
     /**
-     * Test JsonSerializable that works without JSON_THROW_ON_ERROR
+     * Test that toJson encodes the object when given a valid JsonSerializable without the JSON_THROW_ON_ERROR flag.
      */
     public function testToJsonHandlesValidJsonSerializableWithoutThrowFlag(): void
     {
@@ -850,7 +850,7 @@ JSON;
     }
 
     /**
-     * Test object with toArray that works without JSON_THROW_ON_ERROR
+     * Test that toJson encodes the object when given a valid toArray object without the JSON_THROW_ON_ERROR flag.
      */
     public function testToJsonHandlesValidObjectToArrayWithoutThrowFlag(): void
     {
@@ -871,7 +871,7 @@ JSON;
     }
 
     /**
-     * Test plain object that works without JSON_THROW_ON_ERROR
+     * Test that toJson encodes the public properties when given a valid plain object without the JSON_THROW_ON_ERROR flag.
      */
     public function testToJsonHandlesValidPlainObjectWithoutThrowFlag(): void
     {
@@ -883,7 +883,7 @@ JSON;
     }
 
     /**
-     * Test that JsonSerializable returning a scalar is encoded as a JSON scalar.
+     * Test that toJson returns the scalar literal when given a JsonSerializable object whose jsonSerialize returns a scalar.
      */
     public function testToJsonEncodesJsonSerializableReturningScalarValue(): void
     {
@@ -900,7 +900,7 @@ JSON;
     }
 
     /**
-     * Test that a nested array exactly at the configured depth succeeds.
+     * Test that toJson encodes successfully when given a nested array exactly at the configured depth.
      */
     public function testToJsonEncodesArrayExactlyAtConfiguredDepth(): void
     {
@@ -916,7 +916,7 @@ JSON;
     }
 
     /**
-     * Test that float exactly at large magnitude but finite encodes successfully.
+     * Test that toJson encodes the value when given a large but finite float.
      */
     public function testToJsonEncodesLargeButFiniteFloat(): void
     {

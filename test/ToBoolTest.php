@@ -10,7 +10,7 @@ use stdClass;
 final class ToBoolTest extends TestCase
 {
     /**
-     * Test that true boolean is returned unchanged
+     * Test that toBool returns true unchanged when given the boolean true.
      */
     public function testToBoolReturnsTrueBooleanUnchanged(): void
     {
@@ -21,7 +21,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that false boolean is returned unchanged
+     * Test that toBool returns false unchanged when given the boolean false.
      */
     public function testToBoolReturnsFalseBooleanUnchanged(): void
     {
@@ -32,7 +32,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that integer one is converted to true
+     * Test that toBool returns true when given the integer 1.
      */
     public function testToBoolConvertsIntegerOneToTrue(): void
     {
@@ -43,7 +43,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that integer zero is converted to false
+     * Test that toBool returns false when given the integer 0.
      */
     public function testToBoolConvertsIntegerZeroToFalse(): void
     {
@@ -54,7 +54,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that integer two is converted to false
+     * Test that toBool returns false when given the integer 2, which is neither 0 nor 1.
      */
     public function testToBoolConvertsIntegerTwoToFalse(): void
     {
@@ -65,7 +65,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that negative integer is converted to false
+     * Test that toBool returns false when given a negative integer.
      */
     public function testToBoolConvertsNegativeIntegerToFalse(): void
     {
@@ -76,7 +76,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that float 1.0 is converted to true
+     * Test that toBool returns true when given the float 1.0.
      */
     public function testToBoolConvertsFloatOneToTrue(): void
     {
@@ -87,7 +87,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that float 0.0 is converted to false
+     * Test that toBool returns false when given the float 0.0.
      */
     public function testToBoolConvertsFloatZeroToFalse(): void
     {
@@ -98,7 +98,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that float 1.5 is converted to false
+     * Test that toBool returns false when given the float 1.5, which is not exactly 1.0.
      */
     public function testToBoolConvertsFloatOnePointFiveToFalse(): void
     {
@@ -109,7 +109,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "true" is converted to true
+     * Test that toBool returns true when given the string "true".
      */
     public function testToBoolConvertsStringTrueToTrue(): void
     {
@@ -120,7 +120,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase string "TRUE" is converted to true
+     * Test that toBool returns true when given the uppercase string "TRUE".
      */
     public function testToBoolConvertsUppercaseStringTrueToTrue(): void
     {
@@ -131,7 +131,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that mixed case string "TrUe" is converted to true
+     * Test that toBool returns true when given the mixed-case string "TrUe".
      */
     public function testToBoolConvertsMixedCaseStringTrueToTrue(): void
     {
@@ -142,7 +142,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "1" is converted to true
+     * Test that toBool returns true when given the string "1".
      */
     public function testToBoolConvertsStringOneToTrue(): void
     {
@@ -153,7 +153,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "yes" is converted to true
+     * Test that toBool returns true when given the string "yes".
      */
     public function testToBoolConvertsStringYesToTrue(): void
     {
@@ -164,7 +164,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "on" is converted to true
+     * Test that toBool returns true when given the string "on".
      */
     public function testToBoolConvertsStringOnToTrue(): void
     {
@@ -175,7 +175,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "y" is converted to true
+     * Test that toBool returns true when given the string "y".
      */
     public function testToBoolConvertsStringYToTrue(): void
     {
@@ -186,7 +186,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "t" is converted to true
+     * Test that toBool returns true when given the string "t".
      */
     public function testToBoolConvertsStringTToTrue(): void
     {
@@ -197,7 +197,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "false" is converted to false
+     * Test that toBool returns false when given the string "false".
      */
     public function testToBoolConvertsStringFalseToFalse(): void
     {
@@ -208,7 +208,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase string "FALSE" is converted to false
+     * Test that toBool returns false when given the uppercase string "FALSE".
      */
     public function testToBoolConvertsUppercaseStringFalseToFalse(): void
     {
@@ -219,7 +219,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "0" is converted to false
+     * Test that toBool returns false when given the string "0".
      */
     public function testToBoolConvertsStringZeroToFalse(): void
     {
@@ -230,7 +230,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "no" is converted to false
+     * Test that toBool returns false when given the string "no".
      */
     public function testToBoolConvertsStringNoToFalse(): void
     {
@@ -241,7 +241,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "off" is converted to false
+     * Test that toBool returns false when given the string "off".
      */
     public function testToBoolConvertsStringOffToFalse(): void
     {
@@ -252,7 +252,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "n" is converted to false
+     * Test that toBool returns false when given the string "n".
      */
     public function testToBoolConvertsStringNToFalse(): void
     {
@@ -263,7 +263,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string "f" is converted to false
+     * Test that toBool returns false when given the string "f".
      */
     public function testToBoolConvertsStringFToFalse(): void
     {
@@ -274,7 +274,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that empty string is converted to false
+     * Test that toBool returns false when given an empty string.
      */
     public function testToBoolConvertsEmptyStringToFalse(): void
     {
@@ -285,7 +285,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that whitespace only string is converted to false
+     * Test that toBool returns false when given a string containing only whitespace.
      */
     public function testToBoolConvertsWhitespaceOnlyStringToFalse(): void
     {
@@ -296,7 +296,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that whitespace is trimmed from string before conversion
+     * Test that toBool trims surrounding whitespace when given a padded truthy string.
      */
     public function testToBoolTrimsWhitespaceFromStringBeforeConversion(): void
     {
@@ -307,7 +307,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that invalid string is converted to false
+     * Test that toBool returns false when given an unrecognized string such as "maybe".
      */
     public function testToBoolConvertsInvalidStringToFalse(): void
     {
@@ -318,7 +318,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that numeric string other than 0 or 1 is converted to false
+     * Test that toBool returns false when given a numeric string other than "0" or "1".
      */
     public function testToBoolConvertsNumericStringOtherThanZeroOrOneToFalse(): void
     {
@@ -329,7 +329,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that null is converted to false
+     * Test that toBool returns false when given null.
      */
     public function testToBoolConvertsNullToFalse(): void
     {
@@ -340,7 +340,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that array is converted to false
+     * Test that toBool returns false when given an array.
      */
     public function testToBoolConvertsArrayToFalse(): void
     {
@@ -351,7 +351,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that object is converted to false
+     * Test that toBool returns false when given an object.
      */
     public function testToBoolConvertsObjectToFalse(): void
     {
@@ -362,7 +362,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "YES" is converted to true
+     * Test that toBool returns true when given the uppercase string "YES".
      */
     public function testToBoolConvertsUppercaseYesToTrue(): void
     {
@@ -373,7 +373,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "NO" is converted to false
+     * Test that toBool returns false when given the uppercase string "NO".
      */
     public function testToBoolConvertsUppercaseNoToFalse(): void
     {
@@ -384,7 +384,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "ON" is converted to true
+     * Test that toBool returns true when given the uppercase string "ON".
      */
     public function testToBoolConvertsUppercaseOnToTrue(): void
     {
@@ -395,7 +395,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "OFF" is converted to false
+     * Test that toBool returns false when given the uppercase string "OFF".
      */
     public function testToBoolConvertsUppercaseOffToFalse(): void
     {
@@ -406,7 +406,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "Y" is converted to true
+     * Test that toBool returns true when given the uppercase string "Y".
      */
     public function testToBoolConvertsUppercaseYToTrue(): void
     {
@@ -417,7 +417,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "N" is converted to false
+     * Test that toBool returns false when given the uppercase string "N".
      */
     public function testToBoolConvertsUppercaseNToFalse(): void
     {
@@ -428,7 +428,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "T" is converted to true
+     * Test that toBool returns true when given the uppercase string "T".
      */
     public function testToBoolConvertsUppercaseTToTrue(): void
     {
@@ -439,7 +439,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that uppercase "F" is converted to false
+     * Test that toBool returns false when given the uppercase string "F".
      */
     public function testToBoolConvertsUppercaseFToFalse(): void
     {
@@ -450,7 +450,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that tab character is converted to false
+     * Test that toBool returns false when given a string containing only a tab character.
      */
     public function testToBoolConvertsTabCharacterToFalse(): void
     {
@@ -461,7 +461,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that newline character is converted to false
+     * Test that toBool returns false when given a string containing only a newline character.
      */
     public function testToBoolConvertsNewlineCharacterToFalse(): void
     {
@@ -472,7 +472,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that string with whitespace and invalid value is converted to false
+     * Test that toBool returns false when given an unrecognized value padded with whitespace.
      */
     public function testToBoolConvertsStringWithWhitespaceAndInvalidValueToFalse(): void
     {
@@ -483,7 +483,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that positive float other than 1.0 is converted to false
+     * Test that toBool returns false when given a positive float other than 1.0.
      */
     public function testToBoolConvertsPositiveFloatOtherThanOneToFalse(): void
     {
@@ -494,7 +494,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that negative float is converted to false
+     * Test that toBool returns false when given the negative float -1.0.
      */
     public function testToBoolConvertsNegativeFloatToFalse(): void
     {
@@ -505,7 +505,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MAX (neither 1 nor 0) is converted to false.
+     * Test that toBool returns false when given PHP_INT_MAX, which is neither 0 nor 1.
      */
     public function testToBoolConvertsMaxIntToFalse(): void
     {
@@ -516,7 +516,7 @@ final class ToBoolTest extends TestCase
     }
 
     /**
-     * Test that closed resource is converted to false.
+     * Test that toBool returns false when given a closed resource.
      */
     public function testToBoolConvertsClosedResourceToFalse(): void
     {

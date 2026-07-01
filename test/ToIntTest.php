@@ -10,7 +10,7 @@ use stdClass;
 final class ToIntTest extends TestCase
 {
     /**
-     * Test that integer value is returned unchanged
+     * Test that toInt returns the integer unchanged when given a positive integer.
      */
     public function testToIntReturnsIntegerValueUnchanged(): void
     {
@@ -21,7 +21,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that zero is returned unchanged
+     * Test that toInt returns zero unchanged when given the integer zero.
      */
     public function testToIntReturnsZeroUnchanged(): void
     {
@@ -32,7 +32,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative integer is returned unchanged
+     * Test that toInt returns the integer unchanged when given a negative integer.
      */
     public function testToIntReturnsNegativeIntegerUnchanged(): void
     {
@@ -43,7 +43,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that true boolean is converted to one
+     * Test that toInt returns 1 when given the boolean true.
      */
     public function testToIntConvertsTrueBooleanToOne(): void
     {
@@ -54,7 +54,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that false boolean is converted to zero
+     * Test that toInt returns 0 when given the boolean false.
      */
     public function testToIntConvertsFalseBooleanToZero(): void
     {
@@ -65,7 +65,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that numeric string is converted to integer
+     * Test that toInt returns the parsed integer when given a numeric string.
      */
     public function testToIntConvertsNumericStringToInteger(): void
     {
@@ -76,7 +76,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative numeric string is converted
+     * Test that toInt returns the parsed negative integer when given a negative numeric string.
      */
     public function testToIntConvertsNegativeNumericString(): void
     {
@@ -87,7 +87,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that numeric string with whitespace is converted
+     * Test that toInt returns the parsed integer when given a numeric string padded with whitespace.
      */
     public function testToIntConvertsNumericStringWithWhitespace(): void
     {
@@ -98,7 +98,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float string is rounded to integer
+     * Test that toInt rounds down when given a float string below the half boundary.
      */
     public function testToIntRoundsFloatStringToInteger(): void
     {
@@ -109,7 +109,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float string is rounded up at 0.5
+     * Test that toInt rounds up when given a float string exactly at the half boundary.
      */
     public function testToIntRoundsFloatStringUp(): void
     {
@@ -120,7 +120,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float string is rounded down below 0.5
+     * Test that toInt rounds down when given a float string just below the half boundary.
      */
     public function testToIntRoundsFloatStringDown(): void
     {
@@ -131,7 +131,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative float string is rounded correctly
+     * Test that toInt rounds away from zero when given a negative float string at the half boundary.
      */
     public function testToIntRoundsNegativeFloatString(): void
     {
@@ -142,7 +142,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that empty string is converted to 0
+     * Test that toInt returns 0 when given an empty string.
      */
     public function testToIntConvertsEmptyStringToZero(): void
     {
@@ -153,7 +153,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that whitespace only string is converted to 0
+     * Test that toInt returns 0 when given a string containing only whitespace.
      */
     public function testToIntConvertsWhitespaceOnlyStringToZero(): void
     {
@@ -164,7 +164,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that non-numeric string is converted to 0
+     * Test that toInt returns 0 when given a non-numeric string.
      */
     public function testToIntConvertsNonNumericStringToZero(): void
     {
@@ -175,7 +175,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that string with non-numeric characters is converted to 0
+     * Test that toInt returns 0 when given a string mixing digits and non-numeric characters.
      */
     public function testToIntConvertsStringWithNonNumericCharactersToZero(): void
     {
@@ -186,7 +186,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that positive float is rounded
+     * Test that toInt rounds down when given a positive float below the half boundary.
      */
     public function testToIntRoundsPositiveFloat(): void
     {
@@ -197,7 +197,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative float is rounded
+     * Test that toInt rounds toward zero when given a negative float below the half boundary.
      */
     public function testToIntRoundsNegativeFloat(): void
     {
@@ -208,7 +208,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float is rounded up at 0.5
+     * Test that toInt rounds up when given a positive float exactly at the half boundary.
      */
     public function testToIntRoundsFloatUpAtHalf(): void
     {
@@ -219,7 +219,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative float is rounded down at 0.5
+     * Test that toInt rounds away from zero when given a negative float exactly at the half boundary.
      */
     public function testToIntRoundsNegativeFloatDownAtHalf(): void
     {
@@ -230,7 +230,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float exceeding PHP_INT_MAX is converted to 0
+     * Test that toInt returns 0 when given a float that exceeds PHP_INT_MAX.
      */
     public function testToIntConvertsFloatExceedingMaxIntToZero(): void
     {
@@ -241,7 +241,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that float below PHP_INT_MIN is converted to 0
+     * Test that toInt returns 0 when given a float that falls below PHP_INT_MIN.
      */
     public function testToIntConvertsFloatBelowMinIntToZero(): void
     {
@@ -252,7 +252,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that infinite float is converted to 0
+     * Test that toInt returns 0 when given positive infinity.
      */
     public function testToIntConvertsInfiniteFloatToZero(): void
     {
@@ -263,7 +263,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative infinite float is converted to 0
+     * Test that toInt returns 0 when given negative infinity.
      */
     public function testToIntConvertsNegativeInfiniteFloatToZero(): void
     {
@@ -274,7 +274,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that NaN is converted to 0
+     * Test that toInt returns 0 when given a NaN float.
      */
     public function testToIntConvertsNaNToZero(): void
     {
@@ -285,7 +285,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that null is converted to zero
+     * Test that toInt returns 0 when given null.
      */
     public function testToIntConvertsNullToZero(): void
     {
@@ -296,7 +296,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that array is converted to 0
+     * Test that toInt returns 0 when given an array.
      */
     public function testToIntConvertsArrayToZero(): void
     {
@@ -307,7 +307,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that object is converted to 0
+     * Test that toInt returns 0 when given an object.
      */
     public function testToIntConvertsObjectToZero(): void
     {
@@ -318,7 +318,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that string zero is converted
+     * Test that toInt returns 0 when given the string "0".
      */
     public function testToIntConvertsStringZero(): void
     {
@@ -329,7 +329,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MAX is returned unchanged
+     * Test that toInt returns PHP_INT_MAX unchanged when given the maximum integer.
      */
     public function testToIntReturnsMaxIntegerUnchanged(): void
     {
@@ -340,7 +340,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MIN is returned unchanged
+     * Test that toInt returns PHP_INT_MIN unchanged when given the minimum integer.
      */
     public function testToIntReturnsMinIntegerUnchanged(): void
     {
@@ -351,7 +351,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that scientific notation string is converted
+     * Test that toInt returns the expanded integer when given a scientific notation string.
      */
     public function testToIntConvertsScientificNotationString(): void
     {
@@ -362,7 +362,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that negative scientific notation string is converted
+     * Test that toInt returns the expanded negative integer when given a negative scientific notation string.
      */
     public function testToIntConvertsNegativeScientificNotationString(): void
     {
@@ -373,7 +373,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that decimal scientific notation string is rounded
+     * Test that toInt returns the rounded integer when given a decimal scientific notation string.
      */
     public function testToIntRoundsDecimalScientificNotationString(): void
     {
@@ -384,7 +384,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that string with leading zeros is converted
+     * Test that toInt returns the parsed integer when given a numeric string with leading zeros.
      */
     public function testToIntConvertsStringWithLeadingZeros(): void
     {
@@ -395,7 +395,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that string with plus sign is converted
+     * Test that toInt returns the parsed integer when given a numeric string with a leading plus sign.
      */
     public function testToIntConvertsStringWithPlusSign(): void
     {
@@ -406,7 +406,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that octal-like string is treated as decimal
+     * Test that toInt interprets the value as decimal when given an octal-looking string.
      */
     public function testToIntTreatsOctalLikeStringAsDecimal(): void
     {
@@ -417,7 +417,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that hex-like string is converted to 0
+     * Test that toInt returns 0 when given a hexadecimal-looking string, since it is not numeric.
      */
     public function testToIntConvertsHexLikeStringToZero(): void
     {
@@ -428,7 +428,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that numeric string exceeding integer range is converted to 0
+     * Test that toInt returns 0 when given a numeric string that exceeds the integer range.
      */
     public function testToIntConvertsNumericStringExceedingRangeToZero(): void
     {
@@ -439,7 +439,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that numeric string below integer range is converted to 0.
+     * Test that toInt returns 0 when given a numeric string that falls below the integer range.
      */
     public function testToIntConvertsNumericStringBelowRangeToZero(): void
     {
@@ -450,7 +450,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that string "-0" is converted to 0.
+     * Test that toInt returns 0 when given the string "-0".
      */
     public function testToIntConvertsNegativeZeroStringToZero(): void
     {
@@ -461,7 +461,7 @@ final class ToIntTest extends TestCase
     }
 
     /**
-     * Test that closed resource is converted to 0.
+     * Test that toInt returns 0 when given a closed resource.
      */
     public function testToIntConvertsClosedResourceToZero(): void
     {

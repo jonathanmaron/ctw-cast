@@ -10,7 +10,7 @@ use stdClass;
 final class ToFloatTest extends TestCase
 {
     /**
-     * Test that float value is returned unchanged
+     * Test that toFloat returns the float unchanged when given a positive float.
      */
     public function testToFloatReturnsFloatValueUnchanged(): void
     {
@@ -21,7 +21,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that zero float is returned unchanged
+     * Test that toFloat returns 0.0 unchanged when given the float zero.
      */
     public function testToFloatReturnsZeroFloatUnchanged(): void
     {
@@ -32,7 +32,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that negative float is returned unchanged
+     * Test that toFloat returns the float unchanged when given a negative float.
      */
     public function testToFloatReturnsNegativeFloatUnchanged(): void
     {
@@ -43,7 +43,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that integer is converted to float
+     * Test that toFloat returns the widened float when given a positive integer.
      */
     public function testToFloatConvertsIntegerToFloat(): void
     {
@@ -54,7 +54,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that zero integer is converted to float
+     * Test that toFloat returns 0.0 when given the integer zero.
      */
     public function testToFloatConvertsZeroIntegerToFloat(): void
     {
@@ -65,7 +65,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that negative integer is converted to float
+     * Test that toFloat returns the widened float when given a negative integer.
      */
     public function testToFloatConvertsNegativeIntegerToFloat(): void
     {
@@ -76,7 +76,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that true boolean is converted to 1.0
+     * Test that toFloat returns 1.0 when given the boolean true.
      */
     public function testToFloatConvertsTrueBooleanToOnePointZero(): void
     {
@@ -87,7 +87,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that false boolean is converted to 0.0
+     * Test that toFloat returns 0.0 when given the boolean false.
      */
     public function testToFloatConvertsFalseBooleanToZeroPointZero(): void
     {
@@ -98,7 +98,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that null is converted to 0.0
+     * Test that toFloat returns 0.0 when given null.
      */
     public function testToFloatConvertsNullToZeroPointZero(): void
     {
@@ -109,7 +109,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that numeric string is converted to float
+     * Test that toFloat returns the parsed float when given a numeric decimal string.
      */
     public function testToFloatConvertsNumericStringToFloat(): void
     {
@@ -120,7 +120,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that integer string is converted to float
+     * Test that toFloat returns the widened float when given an integer string.
      */
     public function testToFloatConvertsIntegerStringToFloat(): void
     {
@@ -131,7 +131,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that negative numeric string is converted
+     * Test that toFloat returns the parsed negative float when given a negative numeric string.
      */
     public function testToFloatConvertsNegativeNumericString(): void
     {
@@ -142,7 +142,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that numeric string with whitespace is converted
+     * Test that toFloat returns the parsed float when given a numeric string padded with whitespace.
      */
     public function testToFloatConvertsNumericStringWithWhitespace(): void
     {
@@ -153,7 +153,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that scientific notation string is converted
+     * Test that toFloat returns the parsed value when given a scientific notation string.
      */
     public function testToFloatConvertsScientificNotationString(): void
     {
@@ -164,7 +164,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that negative scientific notation string is converted
+     * Test that toFloat returns the parsed value when given a negative scientific notation string.
      */
     public function testToFloatConvertsNegativeScientificNotationString(): void
     {
@@ -175,7 +175,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that empty string is converted to 0.0
+     * Test that toFloat returns 0.0 when given an empty string.
      */
     public function testToFloatConvertsEmptyStringToZero(): void
     {
@@ -186,7 +186,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that whitespace only string is converted to 0.0
+     * Test that toFloat returns 0.0 when given a string containing only whitespace.
      */
     public function testToFloatConvertsWhitespaceOnlyStringToZero(): void
     {
@@ -197,7 +197,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that non-numeric string is converted to 0.0
+     * Test that toFloat returns 0.0 when given a non-numeric string.
      */
     public function testToFloatConvertsNonNumericStringToZero(): void
     {
@@ -208,7 +208,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string with non-numeric characters is converted to 0.0
+     * Test that toFloat returns 0.0 when given a string mixing digits and non-numeric characters.
      */
     public function testToFloatConvertsStringWithNonNumericCharactersToZero(): void
     {
@@ -219,7 +219,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that array is converted to 0.0
+     * Test that toFloat returns 0.0 when given an array.
      */
     public function testToFloatConvertsArrayToZero(): void
     {
@@ -230,7 +230,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that object is converted to 0.0
+     * Test that toFloat returns 0.0 when given an object.
      */
     public function testToFloatConvertsObjectToZero(): void
     {
@@ -241,7 +241,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string zero is converted to float
+     * Test that toFloat returns 0.0 when given the string "0".
      */
     public function testToFloatConvertsStringZeroToFloat(): void
     {
@@ -252,7 +252,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string with leading zeros is converted
+     * Test that toFloat returns the parsed float when given a numeric string with leading zeros.
      */
     public function testToFloatConvertsStringWithLeadingZeros(): void
     {
@@ -263,7 +263,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string with plus sign is converted
+     * Test that toFloat returns the parsed float when given a numeric string with a leading plus sign.
      */
     public function testToFloatConvertsStringWithPlusSign(): void
     {
@@ -274,7 +274,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that very small float is preserved
+     * Test that toFloat preserves precision when given a very small float near the denormal boundary.
      */
     public function testToFloatPreservesVerySmallFloat(): void
     {
@@ -285,7 +285,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that very large float is preserved
+     * Test that toFloat preserves precision when given a very large float near the overflow boundary.
      */
     public function testToFloatPreservesVeryLargeFloat(): void
     {
@@ -296,7 +296,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that infinite float is preserved
+     * Test that toFloat passes the value through unchanged when given positive infinity.
      */
     public function testToFloatPreservesInfiniteFloat(): void
     {
@@ -308,7 +308,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that negative infinite float is preserved
+     * Test that toFloat passes the value through unchanged when given negative infinity.
      */
     public function testToFloatPreservesNegativeInfiniteFloat(): void
     {
@@ -320,7 +320,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that NaN is preserved
+     * Test that toFloat passes the value through unchanged when given a NaN float.
      */
     public function testToFloatPreservesNaN(): void
     {
@@ -331,7 +331,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MAX is converted to float
+     * Test that toFloat returns the widened float when given PHP_INT_MAX.
      */
     public function testToFloatConvertsMaxIntegerToFloat(): void
     {
@@ -342,7 +342,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that PHP_INT_MIN is converted to float
+     * Test that toFloat returns the widened float when given PHP_INT_MIN.
      */
     public function testToFloatConvertsMinIntegerToFloat(): void
     {
@@ -353,7 +353,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string with decimal point only is converted
+     * Test that toFloat returns the parsed float when given a string starting with a decimal point.
      */
     public function testToFloatConvertsStringWithDecimalPointOnly(): void
     {
@@ -364,7 +364,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that string with trailing decimal point is converted
+     * Test that toFloat returns the parsed float when given a string with a trailing decimal point.
      */
     public function testToFloatConvertsStringWithTrailingDecimalPoint(): void
     {
@@ -375,7 +375,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that octal-like string is treated as decimal
+     * Test that toFloat interprets the value as decimal when given an octal-looking numeric string.
      */
     public function testToFloatTreatsOctalLikeStringAsDecimal(): void
     {
@@ -386,7 +386,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that hex-like string is converted to 0.0
+     * Test that toFloat returns 0.0 when given a hexadecimal-looking string, since it is not numeric.
      */
     public function testToFloatConvertsHexLikeStringToZero(): void
     {
@@ -397,7 +397,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that word "Infinity" string is converted to 0.0 since it is not numeric.
+     * Test that toFloat returns 0.0 when given the word "Infinity" as a string, since it is not numeric.
      */
     public function testToFloatConvertsInfinityWordStringToZero(): void
     {
@@ -408,7 +408,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that word "NaN" string is converted to 0.0 since it is not numeric.
+     * Test that toFloat returns 0.0 when given the word "NaN" as a string, since it is not numeric.
      */
     public function testToFloatConvertsNanWordStringToZero(): void
     {
@@ -419,7 +419,7 @@ final class ToFloatTest extends TestCase
     }
 
     /**
-     * Test that closed resource is converted to 0.0.
+     * Test that toFloat returns 0.0 when given a closed resource.
      */
     public function testToFloatConvertsClosedResourceToZero(): void
     {

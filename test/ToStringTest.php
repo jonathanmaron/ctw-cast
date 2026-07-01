@@ -11,7 +11,7 @@ use Stringable;
 final class ToStringTest extends TestCase
 {
     /**
-     * Test that string value is returned unchanged
+     * Test that toString returns the string unchanged when given a plain string.
      */
     public function testToStringReturnsStringValueUnchanged(): void
     {
@@ -22,7 +22,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that empty string is returned unchanged
+     * Test that toString returns an empty string unchanged when given an empty string.
      */
     public function testToStringReturnsEmptyStringUnchanged(): void
     {
@@ -33,7 +33,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that string with whitespace is preserved
+     * Test that toString preserves internal whitespace when given a string with padding and newlines.
      */
     public function testToStringPreservesWhitespaceInString(): void
     {
@@ -44,7 +44,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that positive integer is converted to string
+     * Test that toString returns the decimal representation when given a positive integer.
      */
     public function testToStringConvertsPositiveIntegerToString(): void
     {
@@ -55,7 +55,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that negative integer is converted to string
+     * Test that toString returns the decimal representation when given a negative integer.
      */
     public function testToStringConvertsNegativeIntegerToString(): void
     {
@@ -66,7 +66,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that zero is converted to string
+     * Test that toString returns "0" when given the integer zero.
      */
     public function testToStringConvertsZeroToString(): void
     {
@@ -77,7 +77,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that positive float is converted to string
+     * Test that toString returns the decimal representation when given a positive float.
      */
     public function testToStringConvertsPositiveFloatToString(): void
     {
@@ -88,7 +88,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that negative float is converted to string
+     * Test that toString returns the decimal representation when given a negative float.
      */
     public function testToStringConvertsNegativeFloatToString(): void
     {
@@ -99,7 +99,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that zero float is converted to string
+     * Test that toString returns "0" when given the float zero.
      */
     public function testToStringConvertsZeroFloatToString(): void
     {
@@ -110,7 +110,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that float with scientific notation is converted
+     * Test that toString returns the expanded decimal representation when given a float in scientific notation.
      */
     public function testToStringConvertsFloatWithScientificNotation(): void
     {
@@ -121,7 +121,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that true boolean is converted to string one
+     * Test that toString returns "1" when given the boolean true.
      */
     public function testToStringConvertsTrueBooleanToOne(): void
     {
@@ -132,7 +132,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that false boolean is converted to string zero
+     * Test that toString returns "0" when given the boolean false.
      */
     public function testToStringConvertsFalseBooleanToZero(): void
     {
@@ -143,7 +143,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that null is converted to empty string
+     * Test that toString returns an empty string when given null.
      */
     public function testToStringConvertsNullToEmptyString(): void
     {
@@ -154,7 +154,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that object with __toString method is converted
+     * Test that toString returns the magic method output when given an object implementing __toString.
      */
     public function testToStringConvertsObjectWithToStringMethod(): void
     {
@@ -171,7 +171,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that stringable object is converted
+     * Test that toString returns the string representation when given an object implementing Stringable.
      */
     public function testToStringConvertsStringableObject(): void
     {
@@ -188,7 +188,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that object without __toString method is converted to empty string
+     * Test that toString returns an empty string when given an object without a __toString method.
      */
     public function testToStringConvertsObjectWithoutToStringMethodToEmptyString(): void
     {
@@ -199,7 +199,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that array is converted to empty string
+     * Test that toString returns an empty string when given a non-empty array.
      */
     public function testToStringConvertsArrayToEmptyString(): void
     {
@@ -210,7 +210,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that empty array is converted to empty string
+     * Test that toString returns an empty string when given an empty array.
      */
     public function testToStringConvertsEmptyArrayToEmptyString(): void
     {
@@ -221,7 +221,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that very large integer is converted
+     * Test that toString returns the decimal representation when given PHP_INT_MAX.
      */
     public function testToStringConvertsVeryLargeInteger(): void
     {
@@ -232,7 +232,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that very small integer is converted
+     * Test that toString returns the decimal representation when given PHP_INT_MIN.
      */
     public function testToStringConvertsVerySmallInteger(): void
     {
@@ -243,7 +243,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that unicode string is preserved
+     * Test that toString preserves multibyte characters when given a Unicode string.
      */
     public function testToStringPreservesUnicodeString(): void
     {
@@ -254,7 +254,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that string with special characters is preserved
+     * Test that toString preserves control characters when given a string with escape sequences.
      */
     public function testToStringPreservesSpecialCharacters(): void
     {
@@ -265,7 +265,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that numeric string is preserved
+     * Test that toString returns the string unchanged when given a numeric string.
      */
     public function testToStringPreservesNumericString(): void
     {
@@ -276,7 +276,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that float string is preserved
+     * Test that toString returns the string unchanged when given a decimal-looking string.
      */
     public function testToStringPreservesFloatString(): void
     {
@@ -287,7 +287,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that INF is converted to string
+     * Test that toString returns "INF" when given positive infinity.
      */
     public function testToStringConvertsInfinityToString(): void
     {
@@ -298,7 +298,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that negative INF is converted to string
+     * Test that toString returns "-INF" when given negative infinity.
      */
     public function testToStringConvertsNegativeInfinityToString(): void
     {
@@ -309,7 +309,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that NAN is converted to string
+     * Test that toString returns "NAN" when given a NaN float.
      */
     public function testToStringConvertsNaNToString(): void
     {
@@ -320,7 +320,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that converting NAN raises no PHP warning.
+     * Test that toString returns "NAN" without raising a PHP warning when given a NaN float.
      *
      * PHP 8.5 emits an E_WARNING ("unexpected NAN value was coerced to string")
      * when NAN is cast with (string). The non-finite guard must avoid that cast.
@@ -337,7 +337,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that converting INF raises no PHP warning.
+     * Test that toString returns "INF" without raising a PHP warning when given positive infinity.
      *
      * PHP 8.5 emits an E_WARNING when INF is cast with (string). The non-finite
      * guard must avoid that cast.
@@ -354,7 +354,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that converting negative INF raises no PHP warning.
+     * Test that toString returns "-INF" without raising a PHP warning when given negative infinity.
      */
     public function testToStringConvertsNegativeInfinityWithoutRaisingWarning(): void
     {
@@ -368,7 +368,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that a computed NAN (not the literal constant) is converted to string.
+     * Test that toString returns "NAN" when given a computed NaN rather than the literal constant.
      *
      * Confirms the guard relies on is_nan() rather than identity with the NAN
      * constant.
@@ -384,7 +384,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that a computed INF (float overflow) is converted to string.
+     * Test that toString returns "INF" when given a computed infinity produced by float overflow.
      *
      * Confirms the guard relies on is_finite() rather than identity with the INF
      * constant.
@@ -400,7 +400,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that a computed negative INF (float overflow) is converted to string.
+     * Test that toString returns "-INF" when given a computed negative infinity produced by float overflow.
      */
     public function testToStringConvertsComputedNegativeInfinityToString(): void
     {
@@ -413,7 +413,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that Stringable object returning an empty string yields an empty string.
+     * Test that toString returns an empty string when given a Stringable object whose __toString returns an empty string.
      */
     public function testToStringConvertsStringableObjectReturningEmptyString(): void
     {
@@ -430,7 +430,7 @@ final class ToStringTest extends TestCase
     }
 
     /**
-     * Test that closed resource is converted to empty string.
+     * Test that toString returns an empty string when given a closed resource.
      */
     public function testToStringConvertsClosedResourceToEmptyString(): void
     {

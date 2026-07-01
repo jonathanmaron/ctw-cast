@@ -11,7 +11,7 @@ use ReflectionMethod;
 final class CastTest extends TestCase
 {
     /**
-     * Test that Cast is declared final to prevent extension.
+     * Test that the Cast class reports as final when inspected via reflection.
      */
     public function testCastClassIsDeclaredFinal(): void
     {
@@ -21,7 +21,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toArray is a public static method returning array.
+     * Test that toArray is a public static method declaring an array return type when inspected via reflection.
      */
     public function testToArrayIsPublicStaticMethodReturningArray(): void
     {
@@ -29,7 +29,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toBool is a public static method returning bool.
+     * Test that toBool is a public static method declaring a bool return type when inspected via reflection.
      */
     public function testToBoolIsPublicStaticMethodReturningBool(): void
     {
@@ -37,7 +37,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toFloat is a public static method returning float.
+     * Test that toFloat is a public static method declaring a float return type when inspected via reflection.
      */
     public function testToFloatIsPublicStaticMethodReturningFloat(): void
     {
@@ -45,7 +45,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toInt is a public static method returning int.
+     * Test that toInt is a public static method declaring an int return type when inspected via reflection.
      */
     public function testToIntIsPublicStaticMethodReturningInt(): void
     {
@@ -53,7 +53,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toJson is a public static method returning string.
+     * Test that toJson is a public static method declaring a string return type when inspected via reflection.
      */
     public function testToJsonIsPublicStaticMethodReturningString(): void
     {
@@ -61,7 +61,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toString is a public static method returning string.
+     * Test that toString is a public static method declaring a string return type when inspected via reflection.
      */
     public function testToStringIsPublicStaticMethodReturningString(): void
     {
@@ -69,7 +69,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toArray on a non-castable resource returns the documented [] default.
+     * Test that toArray returns the documented empty array default when given a non-castable open resource.
      */
     public function testToArrayReturnsEmptyArrayDefaultForNonCastableValue(): void
     {
@@ -86,7 +86,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toBool on a non-castable value returns the documented false default.
+     * Test that toBool returns the documented false default when given a non-castable open resource.
      */
     public function testToBoolReturnsFalseDefaultForNonCastableValue(): void
     {
@@ -103,7 +103,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toFloat on a non-castable value returns the documented 0.0 default.
+     * Test that toFloat returns the documented 0.0 default when given a non-castable open resource.
      */
     public function testToFloatReturnsZeroDefaultForNonCastableValue(): void
     {
@@ -120,7 +120,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toInt on a non-castable value returns the documented 0 default.
+     * Test that toInt returns the documented 0 default when given a non-castable open resource.
      */
     public function testToIntReturnsZeroDefaultForNonCastableValue(): void
     {
@@ -137,7 +137,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toJson on a non-castable value returns the documented "{}" default.
+     * Test that toJson returns the documented "{}" default when given a non-castable open resource.
      */
     public function testToJsonReturnsEmptyJsonObjectDefaultForNonCastableValue(): void
     {
@@ -154,7 +154,7 @@ final class CastTest extends TestCase
     }
 
     /**
-     * Test that toString on a non-castable value returns the documented "" default.
+     * Test that toString returns the documented empty string default when given a non-castable open resource.
      */
     public function testToStringReturnsEmptyStringDefaultForNonCastableValue(): void
     {

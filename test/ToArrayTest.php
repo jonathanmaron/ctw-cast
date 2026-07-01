@@ -12,7 +12,7 @@ use stdClass;
 final class ToArrayTest extends TestCase
 {
     /**
-     * Test that array value is returned unchanged
+     * Test that toArray returns the array unchanged when given an indexed array.
      */
     public function testToArrayReturnsArrayValueUnchanged(): void
     {
@@ -23,7 +23,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that empty array is returned unchanged
+     * Test that toArray returns an empty array unchanged when given an empty array.
      */
     public function testToArrayReturnsEmptyArrayUnchanged(): void
     {
@@ -34,7 +34,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that associative array is returned unchanged
+     * Test that toArray returns the array unchanged when given an associative array.
      */
     public function testToArrayReturnsAssociativeArrayUnchanged(): void
     {
@@ -51,7 +51,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that null is converted to empty array
+     * Test that toArray returns an empty array when given null.
      */
     public function testToArrayConvertsNullToEmptyArray(): void
     {
@@ -62,7 +62,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that empty string is converted to empty array
+     * Test that toArray returns an empty array when given an empty string.
      */
     public function testToArrayConvertsEmptyStringToEmptyArray(): void
     {
@@ -73,7 +73,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that whitespace only string is converted to empty array
+     * Test that toArray returns an empty array when given a string containing only whitespace.
      */
     public function testToArrayConvertsWhitespaceOnlyStringToEmptyArray(): void
     {
@@ -84,7 +84,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON array string is parsed
+     * Test that toArray returns the decoded array when given a JSON array string.
      */
     public function testToArrayParsesJsonArrayString(): void
     {
@@ -95,7 +95,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON object string is parsed
+     * Test that toArray returns the decoded associative array when given a JSON object string.
      */
     public function testToArrayParsesJsonObjectString(): void
     {
@@ -109,7 +109,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that nested JSON is parsed
+     * Test that toArray returns the fully decoded structure when given a nested JSON object string.
      */
     public function testToArrayParsesNestedJson(): void
     {
@@ -125,7 +125,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that invalid JSON string is wrapped in array
+     * Test that toArray wraps the original string when given a bracketed string that is invalid JSON.
      */
     public function testToArrayWrapsInvalidJsonStringInArray(): void
     {
@@ -136,7 +136,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that regular string is wrapped in array
+     * Test that toArray wraps the string when given a plain non-JSON string.
      */
     public function testToArrayWrapsRegularStringInArray(): void
     {
@@ -147,7 +147,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that numeric string is wrapped in array
+     * Test that toArray wraps the string when given a numeric string.
      */
     public function testToArrayWrapsNumericStringInArray(): void
     {
@@ -158,7 +158,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that string starting with bracket but not JSON is wrapped in array
+     * Test that toArray wraps the string when given a string that opens with a bracket but is not JSON.
      */
     public function testToArrayWrapsStringStartingWithBracketButNotJson(): void
     {
@@ -169,7 +169,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that string starting with brace but not JSON is wrapped in array
+     * Test that toArray wraps the string when given a string that opens with a brace but is not JSON.
      */
     public function testToArrayWrapsStringStartingWithBraceButNotJson(): void
     {
@@ -180,7 +180,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that integer is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given an integer.
      */
     public function testToArrayWrapsIntegerInArray(): void
     {
@@ -191,7 +191,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that zero is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given the integer zero.
      */
     public function testToArrayWrapsZeroInArray(): void
     {
@@ -202,7 +202,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that negative integer is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given a negative integer.
      */
     public function testToArrayWrapsNegativeIntegerInArray(): void
     {
@@ -213,7 +213,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that float is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given a float.
      */
     public function testToArrayWrapsFloatInArray(): void
     {
@@ -224,7 +224,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that true boolean is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given the boolean true.
      */
     public function testToArrayWrapsTrueBooleanInArray(): void
     {
@@ -235,7 +235,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that false boolean is wrapped in array
+     * Test that toArray wraps the value in a single-element array when given the boolean false.
      */
     public function testToArrayWrapsFalseBooleanInArray(): void
     {
@@ -246,7 +246,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that Traversable object is converted to array
+     * Test that toArray materializes the yielded values when given a Traversable object.
      */
     public function testToArrayConvertsTraversableObjectToArray(): void
     {
@@ -262,7 +262,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that ArrayObject is converted to array
+     * Test that toArray materializes the contents when given an ArrayObject.
      */
     public function testToArrayConvertsArrayObjectToArray(): void
     {
@@ -273,7 +273,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that object with toArray method is converted
+     * Test that toArray returns the method result when given an object exposing a toArray method.
      */
     public function testToArrayConvertsObjectWithToArrayMethod(): void
     {
@@ -299,7 +299,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that object with public properties is converted
+     * Test that toArray extracts the public properties when given an object without a toArray method.
      */
     public function testToArrayConvertsObjectWithPublicProperties(): void
     {
@@ -318,7 +318,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that stdClass object is converted to array
+     * Test that toArray extracts the public properties when given a populated stdClass object.
      */
     public function testToArrayConvertsStdClassObjectToArray(): void
     {
@@ -335,7 +335,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that empty object is converted to empty array
+     * Test that toArray returns an empty array when given an empty stdClass object.
      */
     public function testToArrayConvertsEmptyObjectToEmptyArray(): void
     {
@@ -346,7 +346,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with whitespace is parsed
+     * Test that toArray trims and decodes when given a JSON array string padded with whitespace.
      */
     public function testToArrayParsesJsonWithWhitespace(): void
     {
@@ -357,7 +357,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON empty array is parsed
+     * Test that toArray returns an empty array when given the JSON empty array string.
      */
     public function testToArrayParsesJsonEmptyArray(): void
     {
@@ -368,7 +368,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON empty object is parsed
+     * Test that toArray returns an empty array when given the JSON empty object string.
      */
     public function testToArrayParsesJsonEmptyObject(): void
     {
@@ -379,7 +379,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that multidimensional array is returned unchanged
+     * Test that toArray returns the array unchanged when given a multidimensional array.
      */
     public function testToArrayReturnsMultidimensionalArrayUnchanged(): void
     {
@@ -390,7 +390,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that string with special characters is wrapped in array
+     * Test that toArray wraps the string when given a string containing control characters.
      */
     public function testToArrayWrapsStringWithSpecialCharactersInArray(): void
     {
@@ -401,7 +401,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that unicode string is wrapped in array
+     * Test that toArray wraps the string when given a Unicode string.
      */
     public function testToArrayWrapsUnicodeStringInArray(): void
     {
@@ -412,7 +412,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with unicode is parsed
+     * Test that toArray preserves multibyte characters when given a JSON array of Unicode strings.
      */
     public function testToArrayParsesJsonWithUnicode(): void
     {
@@ -423,7 +423,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that object falls back to get_object_vars when toArray returns non-array
+     * Test that toArray falls back to public properties when given an object whose toArray returns a non-array.
      */
     public function testToArrayFallsBackToGetObjectVarsWhenToArrayReturnsNonArray(): void
     {
@@ -444,7 +444,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that empty array is returned for object with no public properties
+     * Test that toArray returns an empty array when given an object with no public properties.
      */
     public function testToArrayReturnsEmptyArrayForObjectWithNoPublicProperties(): void
     {
@@ -457,7 +457,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that Generator is converted to array
+     * Test that toArray materializes the yielded values when given a Generator without keys.
      */
     public function testToArrayConvertsGeneratorToArray(): void
     {
@@ -473,7 +473,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that Generator with keys is converted to array
+     * Test that toArray preserves the keys when given a Generator that yields key-value pairs.
      */
     public function testToArrayConvertsGeneratorWithKeysToArray(): void
     {
@@ -493,7 +493,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that mixed array is returned unchanged
+     * Test that toArray returns the array unchanged when given an array of mixed scalar types.
      */
     public function testToArrayReturnsMixedArrayUnchanged(): void
     {
@@ -504,7 +504,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with null values is parsed
+     * Test that toArray preserves nulls when given a JSON array containing null values.
      */
     public function testToArrayParsesJsonWithNullValues(): void
     {
@@ -515,7 +515,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with boolean values is parsed
+     * Test that toArray preserves booleans when given a JSON array containing boolean values.
      */
     public function testToArrayParsesJsonWithBooleanValues(): void
     {
@@ -526,7 +526,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that very large array is returned unchanged
+     * Test that toArray returns the array unchanged when given a very large array.
      */
     public function testToArrayReturnsVeryLargeArrayUnchanged(): void
     {
@@ -537,7 +537,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that string that looks like JSON but does not start with bracket is wrapped
+     * Test that toArray wraps the string when given a string containing JSON that does not start at the first character.
      */
     public function testToArrayWrapsStringThatLooksLikeJsonButDoesNotStartWithBracket(): void
     {
@@ -548,7 +548,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that tab character string is converted to empty array
+     * Test that toArray returns an empty array when given a string containing only a tab character.
      */
     public function testToArrayConvertsTabCharacterStringToEmptyArray(): void
     {
@@ -559,7 +559,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that newline character string is converted to empty array
+     * Test that toArray returns an empty array when given a string containing only a newline character.
      */
     public function testToArrayConvertsNewlineCharacterStringToEmptyArray(): void
     {
@@ -570,7 +570,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with numeric keys is parsed
+     * Test that toArray preserves string keys when given a JSON object with numeric-looking keys.
      */
     public function testToArrayParsesJsonWithNumericKeys(): void
     {
@@ -585,7 +585,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that deeply nested JSON is parsed
+     * Test that toArray decodes the entire structure when given a deeply nested JSON object string.
      */
     public function testToArrayParsesDeeplyNestedJson(): void
     {
@@ -604,7 +604,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON with mixed types is parsed
+     * Test that toArray preserves each value's type when given a JSON object with mixed value types.
      */
     public function testToArrayParsesJsonWithMixedTypes(): void
     {
@@ -621,7 +621,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that resource is converted to empty array
+     * Test that toArray returns an empty array when given an open resource.
      */
     public function testToArrayConvertsResourceToEmptyArray(): void
     {
@@ -638,10 +638,10 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON string decoding to a scalar is wrapped rather than returned raw.
+     * Test that toArray returns the decoded array when given a JSON array that contains a single scalar.
      *
-     * When JSON decodes to a non-array (e.g. a number or a quoted string), the
-     * method falls through to wrapping the original string in an array.
+     * The decoded value is an array, so it is returned directly rather than being
+     * wrapped again in an outer array.
      */
     public function testToArrayWrapsJsonStringDecodingToScalar(): void
     {
@@ -652,7 +652,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that JSON string starting with bracket but decoding to null is wrapped.
+     * Test that toArray wraps the original string when given a bracketed string whose JSON decodes to a non-array.
      */
     public function testToArrayWrapsJsonStringStartingWithBracketAndDecodingToNull(): void
     {
@@ -663,7 +663,7 @@ final class ToArrayTest extends TestCase
     }
 
     /**
-     * Test that closed resource is converted to empty array.
+     * Test that toArray returns an empty array when given a closed resource.
      */
     public function testToArrayConvertsClosedResourceToEmptyArray(): void
     {
