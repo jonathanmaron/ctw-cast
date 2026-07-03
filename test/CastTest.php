@@ -69,6 +69,54 @@ final class CastTest extends TestCase
     }
 
     /**
+     * Test that toArray is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToArrayIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toArray');
+    }
+
+    /**
+     * Test that toBool is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToBoolIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toBool');
+    }
+
+    /**
+     * Test that toFloat is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToFloatIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toFloat');
+    }
+
+    /**
+     * Test that toInt is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToIntIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toInt');
+    }
+
+    /**
+     * Test that toJson is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToJsonIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toJson');
+    }
+
+    /**
+     * Test that toString is annotated with #[\NoDiscard] so discarding its return value warns callers.
+     */
+    public function testToStringIsMarkedNoDiscard(): void
+    {
+        $this->assertMethodIsMarkedNoDiscard('toString');
+    }
+
+    /**
      * Test that toArray returns the documented empty array default when given a non-castable open resource.
      */
     public function testToArrayReturnsEmptyArrayDefaultForNonCastableValue(): void
@@ -183,5 +231,21 @@ final class CastTest extends TestCase
         $returnType = $reflection->getReturnType();
         self::assertNotNull($returnType, sprintf('%s must declare a return type', $method));
         self::assertSame($expectedReturnType, (string) $returnType);
+    }
+
+    /**
+     * Assert that a method on Cast carries exactly one native #[\NoDiscard]
+     * attribute with a non-empty consumer-facing message.
+     */
+    private function assertMethodIsMarkedNoDiscard(string $method): void
+    {
+        $reflection = new ReflectionMethod(Cast::class, $method);
+
+        $attributes = $reflection->getAttributes(\NoDiscard::class);
+        self::assertCount(1, $attributes, sprintf('%s must carry exactly one #[\NoDiscard] attribute', $method));
+
+        $message = $attributes[0]->newInstance()->message;
+        self::assertNotNull($message, sprintf('%s #[\NoDiscard] must supply a message', $method));
+        self::assertNotSame('', $message, sprintf('%s #[\NoDiscard] message must not be empty', $method));
     }
 }
