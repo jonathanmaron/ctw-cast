@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Internal modernization for the PHP 8.5 runtime. No public API, behavior, or
+type contract changed; every `Cast::to*` method keeps the same signature and
+documented return values.
+
+### Added
+
+- `#[\NoDiscard]` attribute on `Cast::toArray()`, `Cast::toBool()`,
+  `Cast::toFloat()`, `Cast::toInt()`, `Cast::toJson()`, and `Cast::toString()`.
+  These methods are pure, so discarding their return value is always a
+  mistake; consumers on PHP 8.5 now receive a native warning (and IDE/static
+  analysis hint) if they call a cast without using the result. This is a
+  non-breaking, additive diagnostic — correct usage is unaffected.
+
+### Changed
+
+- Refactored the string branch of `Cast::toBool()` to use the PHP 8.5 pipe
+  operator (`$value |> trim(...) |> strtolower(...)`), expressing the
+  normalization as a left-to-right data flow. Behavior is identical.
+
 ## [2.0.0] - 2026-04-18
 
 This release removes all exception-based error handling. `Cast::to*` methods
@@ -80,6 +101,7 @@ $port = Cast::toInt($_ENV['PORT'] ?? '3306');
   in PHP 8.3+.
 - `Ctw\Cast\Exception\CastException` thrown on unsupported conversions.
 
+[Unreleased]: https://github.com/jonathanmaron/ctw-cast/compare/release-2.0.0...HEAD
 [2.0.0]: https://github.com/jonathanmaron/ctw-cast/compare/release-1.0.1...release-2.0.0
 [1.0.1]: https://github.com/jonathanmaron/ctw-cast/compare/release-1.0.0...release-1.0.1
 [1.0.0]: https://github.com/jonathanmaron/ctw-cast/releases/tag/release-1.0.0
