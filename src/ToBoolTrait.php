@@ -62,6 +62,7 @@ trait ToBoolTrait
      *
      * @return bool The cast boolean, or false if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toBool(mixed $value): bool
     {
         if (is_bool($value)) {
@@ -70,20 +71,22 @@ trait ToBoolTrait
 
         if (is_int($value)) {
             return match ($value) {
-                self::INT_TRUE  => self::BOOL_TRUE,
-                default         => self::EMPTY_BOOL,
+                self::INT_TRUE => self::BOOL_TRUE,
+                default        => self::EMPTY_BOOL,
             };
         }
 
         if (is_float($value)) {
             return match ($value) {
-                self::FLOAT_TRUE  => self::BOOL_TRUE,
-                default           => self::EMPTY_BOOL,
+                self::FLOAT_TRUE => self::BOOL_TRUE,
+                default          => self::EMPTY_BOOL,
             };
         }
 
         if (is_string($value)) {
-            $lower = strtolower(trim($value));
+            $lower = $value
+                     |> trim(...)
+                     |> strtolower(...);
 
             return in_array($lower, self::TRUTHY_STRINGS, true) ? self::BOOL_TRUE : self::EMPTY_BOOL;
         }

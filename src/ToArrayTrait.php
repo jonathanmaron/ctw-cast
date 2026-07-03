@@ -56,6 +56,7 @@ trait ToArrayTrait
      *
      * @return array<array-key, mixed> The cast array, or [] if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toArray(mixed $value): array
     {
         if (is_array($value)) {

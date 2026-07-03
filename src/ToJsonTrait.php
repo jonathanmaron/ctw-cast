@@ -59,6 +59,7 @@ trait ToJsonTrait
      *
      * @return string The JSON encoded string, or "{}" if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toJson(
         mixed $value,
         int $flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,

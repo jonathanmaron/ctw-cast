@@ -49,6 +49,7 @@ trait ToFloatTrait
      *
      * @return float The cast float, or 0.0 if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toFloat(mixed $value): float
     {
         if (is_float($value)) {

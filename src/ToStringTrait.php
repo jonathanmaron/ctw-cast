@@ -42,6 +42,7 @@ trait ToStringTrait
      *
      * @return string The cast string, or "" if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toString(mixed $value): string
     {
         if (is_string($value)) {

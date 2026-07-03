@@ -55,6 +55,7 @@ trait ToIntTrait
      *
      * @return int The cast integer, or 0 if the value cannot be cast
      */
+    #[\NoDiscard('The cast result must be used; this method has no side effects.')]
     public static function toInt(mixed $value): int
     {
         if (is_int($value)) {
