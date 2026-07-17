@@ -7,7 +7,7 @@
         "php": "^8.5"
     },
     "require-dev": {
-        "ctw/ctw-qa": "dev-php85",
+        "ctw/ctw-qa": "^6.0",
         "phpunit/phpunit": "^13.0",
         "symfony/var-dumper": "^8.0"
     },
